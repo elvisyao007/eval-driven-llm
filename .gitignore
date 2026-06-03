@@ -7,6 +7,8 @@ __pycache__/
 data/corpus/**/*.pdf
 data/**/*.bin
 *.faiss
+# JQaRA corpus passages: CC BY-SA Wikipedia text; rebuild via make build-jqara
+data/corpus/jqara/
 reports/*/  # run outputs; commit curated reports deliberately, not all
 !reports/.gitkeep
 
