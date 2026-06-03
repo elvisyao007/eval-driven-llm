@@ -65,7 +65,7 @@ Full diagram and data flow: [`docs/architecture.md`](docs/architecture.md).
 
 | Layer | Choice | Why (short) |
 |---|---|---|
-| Generation | Gemma 3 (27B, quantized) + Swallow / ELYZA-JP for JP-specialized comparison | clean license, multilingual, fits a single 32 GB GPU; JP models for token efficiency |
+| Generation | Gemma 4 (27B, quantized) + Gemma 3 / Swallow / ELYZA-JP for comparison | Apache-2.0, multilingual, fits a single 32 GB GPU; comparison models measure whether newer actually wins |
 | Retrieval (1st pass) | ruri-v3-310m (dense) — BGE-M3 (dense+sparse) as hybrid option | Japanese-OSS retrieval SOTA; self-hosted, zero data egress |
 | Rerank (2nd pass) | BGE-Reranker-v2-m3 | two-stage retrieve → rerank for precision@1 |
 | Serving / gateway | vLLM (OpenAI-compatible) + LiteLLM | already part of the lab; swappable behind one interface |
@@ -106,7 +106,7 @@ make compare GOLDEN=data/golden/jqara/v0  # dense-only vs dense+cross-encoder
 
 # end-to-end generation eval (faithfulness), pinned LOCAL judge:
 make rag-eval GOLDEN=data/golden/jqara/v0 \
-     BASE_URL=http://localhost:8000/v1 GEN_MODEL=gemma3-27b-q JUDGE_MODEL=elyza-jp-8b
+     BASE_URL=http://localhost:8000/v1 GEN_MODEL=gemma4-27b-q JUDGE_MODEL=elyza-jp-8b
 ```
 
 Generation eval reports faithfulness (with judge variance) **next to** a

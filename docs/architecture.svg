@@ -58,7 +58,7 @@
   <rect x="470" y="320" width="450" height="52" rx="9" fill="#ffffff" stroke="#d7d7d2" stroke-width="1.5"/>
   <rect x="470" y="320" width="5" height="52" rx="2" fill="#0e7c7b"/>
   <text x="486" y="342" font-size="13" font-weight="700" fill="#1f2933">④ Generate</text>
-  <text x="486" y="360" font-size="10.5" fill="#5b6770">Gemma 3 / Swallow / ELYZA-JP via vLLM (local, OpenAI-compatible)</text>
+  <text x="486" y="360" font-size="10.5" fill="#5b6770">Gemma 4 / Swallow / ELYZA-JP via vLLM (local, OpenAI-compatible)</text>
 
   <!-- reserved agent -->
   <rect x="470" y="388" width="450" height="40" rx="9" fill="none" stroke="#b3bac1" stroke-width="1.5" stroke-dasharray="5 4"/>

@@ -29,7 +29,7 @@ and measurability — never an ideal/clean-notebook scenario. Concretely:
 ## Locked architecture decisions (see DECISIONS.md for why)
 - The CORE is eval; on-prem deploy is the carrier; RAG/agent/frameworks/models
   are swappable payload behind config — do NOT hard-code or over-invest in them.
-- Deployment models are clean-license / local only (Gemma 3 / Swallow / ELYZA-JP
+- Deployment models are clean-license / local only (Gemma 4 / Swallow / ELYZA-JP
   via vLLM, OpenAI-compatible). No cloud APIs in the deployment path.
 - Agent layer is reserved, NOT implemented (ADR-0005). Keep the extension point;
   don't build an agent product until a concrete use case defines it.

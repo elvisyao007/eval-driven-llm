@@ -88,7 +88,7 @@ def main():
     ap.add_argument("--gen", default="template", help="template|openai")
     ap.add_argument("--judge", default="test", help="test|local")
     ap.add_argument("--base-url", default="http://localhost:8000/v1")
-    ap.add_argument("--model", default="gemma3-27b-q")
+    ap.add_argument("--model", default="gemma4-27b-q")
     ap.add_argument("--judge-model", default="elyza-jp-8b")  # separate from gen
     ap.add_argument("--k", type=int, default=5)
     ap.add_argument("--runs", type=int, default=3)

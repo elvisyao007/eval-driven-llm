@@ -2,9 +2,10 @@
 # on-prem / clean-license only; Chinese models are content-layer only.
 
 generation:
-  default: gemma3-27b-q      # clean license, multilingual, fits 32GB quantized
-  dev: gemma3-12b-q          # smaller/faster for eval-harness iteration
-  comparison:
+  default: gemma4-27b-q      # Apache-2.0, multilingual, fits 32GB quantized
+  dev: gemma4-12b-q          # smaller/faster for eval-harness iteration
+  comparison:                # measure, don't assume: does Gemma 4 actually beat
+    - gemma3-27b-q           #   Gemma 3 on OUR task? the harness decides, not the changelog
     - swallow-llama3.1
     - elyza-jp-8b
   serve: vllm                # OpenAI-compatible; behind LiteLLM gateway

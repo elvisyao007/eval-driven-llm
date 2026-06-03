@@ -1,6 +1,6 @@
 """Generation client — OpenAI-compatible (vLLM serving, LiteLLM gateway).
 
-On-prem only: base_url points at locally served models (Gemma 3 / Swallow /
+On-prem only: base_url points at locally served models (Gemma 4 / Swallow /
 ELYZA-JP). No cloud endpoints in the deployment path (ADR-0003). Swapping the
 model is a config change, not a code change. Uses the stdlib so no extra
 dependency is pulled in for the HTTP call.

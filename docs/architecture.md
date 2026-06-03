@@ -21,7 +21,7 @@ go obsolete.
         ingest                 index               retrieve              generate
   ┌──────────────┐      ┌───────────────┐    ┌──────────────────┐   ┌─────────────┐
   │ dirty PDFs / │      │ vector store  │    │ dense (ruri-v3)  │   │ vLLM serve  │
-  │ docs         │ ───▶ │ Faiss/Qdrant  │──▶ │   ↓ widen        │──▶│ Gemma3/JP   │──▶ answer
+  │ docs         │ ───▶ │ Faiss/Qdrant  │──▶ │   ↓ widen        │──▶│ Gemma4/JP   │──▶ answer
   │ clean/dedup/ │      │ (+ metadata   │    │ rerank (bge-v2-m3)│   │ via LiteLLM │
   │ chunk/normalize│    │  for perms)   │    │   ↓ top-k         │   └─────────────┘
   └──────────────┘      └───────────────┘    └──────────────────┘          │

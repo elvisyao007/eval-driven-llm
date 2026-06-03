@@ -108,17 +108,21 @@ forces a different index type.
 on a single 32 GB GPU (RTX 5090); license/compliance story must be clean enough
 that a security-conscious customer cannot object on data-sovereignty grounds.
 
-**Decision.** Default payload = **Gemma 3 (27B, quantized)**. Carry
-**Swallow** and **ELYZA-JP** as Japanese-specialized comparison models.
-Use a **smaller/faster** model (Gemma 3 12B or ELYZA-JP-8B) during eval-harness
-development for fast iteration loops; run the full multi-model comparison only
-for the *published* eval report.
+**Decision.** Default payload = **Gemma 4 (27B, quantized)**. Carry **Gemma 3**,
+**Swallow** and **ELYZA-JP** as comparison models. Use a **smaller/faster** model
+(Gemma 4 12B or ELYZA-JP-8B) during eval-harness development for fast iteration
+loops; run the full multi-model comparison only for the *published* eval report.
 
 **Why.**
-- Gemma 3 27B fits a single 32 GB GPU when quantized, is multilingual, and has
-  a clean, well-understood license — the "model running on your hardware,
-  trained by a Western lab" story is the easiest to defend in a Japanese
+- Gemma 4 27B fits a single 32 GB GPU when quantized, is multilingual (Japanese
+  is a natively supported language), and ships under **Apache 2.0** — a cleaner,
+  more permissive license than Gemma 3's custom terms, which strengthens the
+  "model on your hardware, no usage strings attached" story in a Japanese
   enterprise security review.
+- Gemma 3 is kept as a comparison baseline on purpose: "newer" is a benchmark
+  claim, not a guarantee on *this* task. The harness measures whether Gemma 4
+  actually beats Gemma 3 on our golden set (faithfulness, context handling) —
+  the changelog does not get to decide that.
 - Swallow (Tokyo Science Univ. / AIST, Japanese-continued-pretraining on Llama)
   and ELYZA-JP optimize Japanese token efficiency and JP-task quality; they are
   the right *comparison* axis, and the model-vs-model gap is itself a content
@@ -133,8 +137,9 @@ reranker + KV cache on 32 GB without aggressive quantization that muddies the
 eval). Cloud API generation (defeats on-prem). Chinese models in deployment
 (compliance).
 
-**Revisit when.** A clean-license model meaningfully beats Gemma 3 / Swallow on
-our golden set within the 32 GB budget.
+**Revisit when.** A clean-license model meaningfully beats Gemma 4 / Swallow on
+our golden set within the 32 GB budget. (Updated 2026-06: default moved
+Gemma 3 → Gemma 4 on its Apache-2.0 release; Gemma 3 retained as comparison.)
 
 ---
 
