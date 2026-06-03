@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 660" font-family="-apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif">
+  <rect x="0" y="0" width="980" height="660" fill="#fbfbf9"/>
+
+  <!-- title -->
+  <text x="40" y="40" font-size="22" font-weight="700" fill="#1f2933">eval-driven-llm — system architecture</text>
+  <text x="40" y="63" font-size="13" fill="#5b6770">Eval is the backbone. The RAG payload is swappable. Runs on-prem: data never leaves the customer.</text>
+  <line x1="40" y1="80" x2="940" y2="80" stroke="#e6e6e1" stroke-width="1"/>
+
+  <!-- ============ LEFT: concentric investment model ============ -->
+  <text x="60" y="106" font-size="12" font-weight="700" fill="#5b6770" letter-spacing="1">INVESTMENT MODEL</text>
+
+  <!-- payload ring -->
+  <rect x="60" y="116" width="300" height="300" rx="16" fill="#fbf3da" stroke="#cda434" stroke-width="1.5"/>
+  <text x="78" y="138" font-size="13" font-weight="700" fill="#8a6d11">PAYLOAD · swappable</text>
+  <text x="78" y="156" font-size="10.5" fill="#8a6d11">RAG now → agent later · frameworks/models = config</text>
+
+  <!-- carrier ring -->
+  <rect x="98" y="166" width="224" height="210" rx="14" fill="#e9f0f5" stroke="#5a7d9a" stroke-width="1.5"/>
+  <text x="116" y="188" font-size="13" font-weight="700" fill="#3a5a78">CARRIER · on-prem</text>
+  <text x="116" y="205" font-size="10.5" fill="#3a5a78">secure deploy · PoC → production hardening</text>
+
+  <!-- core ring -->
+  <rect x="138" y="216" width="144" height="140" rx="12" fill="#d9f0ef" stroke="#0e7c7b" stroke-width="2"/>
+  <text x="210" y="270" font-size="14" font-weight="700" fill="#0a5b5a" text-anchor="middle">CORE</text>
+  <text x="210" y="289" font-size="11" fill="#0a5b5a" text-anchor="middle">eval methodology</text>
+  <text x="210" y="305" font-size="9.5" fill="#0a5b5a" text-anchor="middle">framework- &amp; model-agnostic</text>
+
+  <text x="210" y="440" font-size="11" font-style="italic" fill="#7a838b" text-anchor="middle">Investment heaviest at the center —</text>
+  <text x="210" y="455" font-size="11" font-style="italic" fill="#7a838b" text-anchor="middle">the part that does not go obsolete.</text>
+
+  <!-- ============ RIGHT: data flow ============ -->
+  <text x="470" y="106" font-size="12" font-weight="700" fill="#5b6770" letter-spacing="1">DATA FLOW</text>
+
+  <!-- eval spine -->
+  <rect x="408" y="116" width="26" height="300" rx="6" fill="#0e7c7b"/>
+  <text x="421" y="266" font-size="11.5" font-weight="700" fill="#ffffff" text-anchor="middle" transform="rotate(-90 421 266)">EVAL HARNESS · instruments every stage</text>
+
+  <!-- stage boxes -->
+  <!-- ingest -->
+  <rect x="470" y="116" width="450" height="52" rx="9" fill="#ffffff" stroke="#d7d7d2" stroke-width="1.5"/>
+  <rect x="470" y="116" width="5" height="52" rx="2" fill="#0e7c7b"/>
+  <text x="486" y="138" font-size="13" font-weight="700" fill="#1f2933">① Ingest</text>
+  <text x="486" y="156" font-size="10.5" fill="#5b6770">dirty-data tolerant: parse · NFKC · dedup · chunk (+ACL) · audit log</text>
+
+  <!-- index -->
+  <rect x="470" y="184" width="450" height="52" rx="9" fill="#ffffff" stroke="#d7d7d2" stroke-width="1.5"/>
+  <rect x="470" y="184" width="5" height="52" rx="2" fill="#0e7c7b"/>
+  <text x="486" y="206" font-size="13" font-weight="700" fill="#1f2933">② Index</text>
+  <text x="486" y="224" font-size="10.5" fill="#5b6770">Faiss (benchmark) / Qdrant (per-user ACL filtering)</text>
+
+  <!-- retrieve -->
+  <rect x="470" y="252" width="450" height="52" rx="9" fill="#ffffff" stroke="#d7d7d2" stroke-width="1.5"/>
+  <rect x="470" y="252" width="5" height="52" rx="2" fill="#0e7c7b"/>
+  <text x="486" y="274" font-size="13" font-weight="700" fill="#1f2933">③ Retrieve</text>
+  <text x="486" y="292" font-size="10.5" fill="#5b6770">ruri-v3 dense  →  BGE-reranker-v2-m3   (two-stage)</text>
+
+  <!-- generate -->
+  <rect x="470" y="320" width="450" height="52" rx="9" fill="#ffffff" stroke="#d7d7d2" stroke-width="1.5"/>
+  <rect x="470" y="320" width="5" height="52" rx="2" fill="#0e7c7b"/>
+  <text x="486" y="342" font-size="13" font-weight="700" fill="#1f2933">④ Generate</text>
+  <text x="486" y="360" font-size="10.5" fill="#5b6770">Gemma 3 / Swallow / ELYZA-JP via vLLM (local, OpenAI-compatible)</text>
+
+  <!-- reserved agent -->
+  <rect x="470" y="388" width="450" height="40" rx="9" fill="none" stroke="#b3bac1" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <text x="486" y="413" font-size="11.5" fill="#8a929a">⤷ Agent / tool-calling — reserved, not implemented (ADR-0005)</text>
+
+  <!-- flow arrows between stages -->
+  <g stroke="#9aa3ab" stroke-width="1.5" fill="#9aa3ab">
+    <line x1="695" y1="168" x2="695" y2="182"/><path d="M695 186 l-4 -6 h8 z"/>
+    <line x1="695" y1="236" x2="695" y2="250"/><path d="M695 254 l-4 -6 h8 z"/>
+    <line x1="695" y1="304" x2="695" y2="318"/><path d="M695 322 l-4 -6 h8 z"/>
+  </g>
+  <line x1="695" y1="372" x2="695" y2="388" stroke="#b3bac1" stroke-width="1.5" stroke-dasharray="5 4"/>
+
+  <!-- spine tick-arrows into each stage -->
+  <g stroke="#0e7c7b" stroke-width="1.5" fill="#0e7c7b">
+    <line x1="434" y1="142" x2="466" y2="142"/><path d="M470 142 l-6 -4 v8 z"/>
+    <line x1="434" y1="210" x2="466" y2="210"/><path d="M470 210 l-6 -4 v8 z"/>
+    <line x1="434" y1="278" x2="466" y2="278"/><path d="M470 278 l-6 -4 v8 z"/>
+    <line x1="434" y1="346" x2="466" y2="346"/><path d="M470 346 l-6 -4 v8 z"/>
+  </g>
+
+  <!-- ============ BOTTOM: eval outputs ============ -->
+  <rect x="40" y="478" width="900" height="132" rx="12" fill="#eef8f7" stroke="#0e7c7b" stroke-width="1.5"/>
+  <text x="60" y="504" font-size="13" font-weight="700" fill="#0a5b5a">EVAL OUTPUTS — the objective definition of “good enough to ship”</text>
+
+  <!-- four columns -->
+  <g>
+    <text x="60" y="530" font-size="11.5" font-weight="700" fill="#1f2933">Frozen golden set</text>
+    <text x="60" y="547" font-size="10" fill="#5b6770">versioned · corpus hashes</text>
+    <text x="60" y="561" font-size="10" fill="#5b6770">verified before scoring</text>
+
+    <text x="285" y="530" font-size="11.5" font-weight="700" fill="#1f2933">Retrieval metrics</text>
+    <text x="285" y="547" font-size="10" fill="#5b6770">recall@k · MRR · nDCG · P@1</text>
+    <text x="285" y="561" font-size="10" fill="#5b6770">deterministic (no judge)</text>
+
+    <text x="510" y="530" font-size="11.5" font-weight="700" fill="#1f2933">Generation</text>
+    <text x="510" y="547" font-size="10" fill="#5b6770">faithfulness ± judge variance</text>
+    <text x="510" y="561" font-size="10" fill="#5b6770">context-recall (ground truth)</text>
+
+    <text x="735" y="530" font-size="11.5" font-weight="700" fill="#1f2933">Report</text>
+    <text x="735" y="547" font-size="10" fill="#5b6770">baseline vs tuned · per-query</text>
+    <text x="735" y="561" font-size="10" fill="#5b6770">flips · re-runnable</text>
+  </g>
+
+  <line x1="60" y1="575" x2="920" y2="575" stroke="#cfe6e4" stroke-width="1"/>
+  <text x="60" y="594" font-size="10.5" font-style="italic" fill="#0a5b5a">⚑ high faithfulness + low context-recall ⇒ confidently grounded in the WRONG documents (auto-flagged)</text>
+
+  <!-- dashed arrow from pipeline down into eval outputs -->
+  <line x1="421" y1="416" x2="421" y2="478" stroke="#0e7c7b" stroke-width="1.5" stroke-dasharray="5 4"/>
+  <path d="M421 478 l-4 -7 h8 z" fill="#0e7c7b"/>
+
+  <!-- footer note -->
+  <text x="940" y="40" font-size="11" fill="#0a5b5a" text-anchor="end" font-weight="600">on-prem · no cloud APIs in the deployment path</text>
+</svg>

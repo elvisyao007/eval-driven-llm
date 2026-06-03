@@ -1,0 +1,6 @@
+{"id": "q1", "query": "単一GPUで大きなモデルを動かすにはどうすればよいか", "relevant_doc_ids": ["3446dea86224b2a7", "5732448d10da174a"]}
+{"id": "q2", "query": "検索の上位適合率を上げる方法は", "relevant_doc_ids": ["c55e32073acef314"]}
+{"id": "q3", "query": "データを社外に出さずにLLMを使う方式は", "relevant_doc_ids": ["5e4ea812b54a40b2"]}
+{"id": "q4", "query": "ユーザごとに検索範囲を制限できるベクトルDBは", "relevant_doc_ids": ["9546b4b8be812581"]}
+{"id": "q5", "query": "日本語検索に強い埋め込みモデルは", "relevant_doc_ids": ["5f28a895ff0c653b"]}
+{"id": "q6", "query": "評価で再現性を担保する基盤は何か", "relevant_doc_ids": ["8da136fb32ac16b4"]}

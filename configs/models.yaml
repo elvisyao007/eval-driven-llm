@@ -1,0 +1,29 @@
+# Model registry. Payload models are swappable (ADR-0003). Deployment path is
+# on-prem / clean-license only; Chinese models are content-layer only.
+
+generation:
+  default: gemma3-27b-q      # clean license, multilingual, fits 32GB quantized
+  dev: gemma3-12b-q          # smaller/faster for eval-harness iteration
+  comparison:
+    - swallow-llama3.1
+    - elyza-jp-8b
+  serve: vllm                # OpenAI-compatible; behind LiteLLM gateway
+
+embedding:
+  # in-sandbox / baseline: lexical, no downloads, deterministic
+  baseline:
+    name: hashing
+    dim: 1024
+  # production semantic embedder (needs weights on the target machine)
+  default:
+    name: ruri
+    model: cl-nagoya/ruri-v3-310m
+    # Ruri expects instruction prefixes — VERIFY against the model card,
+    # a wrong prefix silently degrades retrieval.
+    query_prefix: "検索クエリ: "
+    doc_prefix: "検索文書: "
+  hybrid: bge-m3             # dense+sparse+multivector in one model
+
+reranker:
+  default: bge-reranker-v2-m3
+  widen: 50                  # first-pass candidates before rerank

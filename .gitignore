@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+.pytest_cache/
+# large/sensitive artifacts never committed
+data/corpus/**/*.pdf
+data/**/*.bin
+*.faiss
+reports/*/  # run outputs; commit curated reports deliberately, not all
+!reports/.gitkeep
+
+# generated ingestion fixtures + outputs (rebuild via scripts/ + make)
+data/corpus/_dirty/
+data/corpus/_ingested/
