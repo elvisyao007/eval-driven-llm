@@ -13,7 +13,9 @@ dev = ["pytest>=8"]
 # in-sandbox / baseline loop (deterministic, no model downloads)
 base = ["numpy", "faiss-cpu"]
 # production semantic stack (downloads model weights on the target machine)
-track-a = ["numpy", "faiss-cpu", "sentence-transformers", "datasets", "FlagEmbedding"]
+# transformers<5 required: FlagEmbedding 1.4.0 calls prepare_for_model which was
+# removed in transformers 5.0 (the tokenizer internal rework from 2025-05).
+track-a = ["numpy", "faiss-cpu", "sentence-transformers", "datasets", "FlagEmbedding", "transformers<5"]
 
 [build-system]
 requires = ["hatchling"]
