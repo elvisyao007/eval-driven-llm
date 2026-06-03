@@ -5,10 +5,12 @@ and a relevance `label`. Rows are grouped by `q_id`; passages with label==1 are
 the relevant set for that question. License: CC BY-SA 4.0 (verify before
 redistributing derived data — commit hashes + a build script, not the corpus).
 
-Assumed columns (verify against the live dataset card; change in one place):
-    q_id, question, answers, title, text, label
+Verified columns (2026-06-04 against hotchpotch/JQaRA test split):
+    id, q_id, passage_row_id, label, text, title, question, answers
 The dataset ships no passage id, so we synthesize a stable id from content
 (elv.eval.ids.stable_doc_id), which also dedups identical passages.
+`answers` is a list of strings; we take the first as reference_answer so
+generation eval has a ground-truth target.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from ..ids import content_hash, stable_doc_id
 
 COL_QID = "q_id"
 COL_QUESTION = "question"
+COL_ANSWERS = "answers"
 COL_TITLE = "title"
 COL_TEXT = "text"
 COL_LABEL = "label"
@@ -44,8 +47,11 @@ def build_frozen_set(split: str, version: str, out_root: str | Path) -> Path:
     for row in ds:
         doc_id = stable_doc_id(row[COL_TITLE], row[COL_TEXT])
         corpus.setdefault(doc_id, {"title": row[COL_TITLE], "text": row[COL_TEXT]})
+        answers = row.get(COL_ANSWERS) or []
+        ref = answers[0] if answers else None
         q = by_q.setdefault(
-            str(row[COL_QID]), {"query": row[COL_QUESTION], "relevant": set()}
+            str(row[COL_QID]),
+            {"query": row[COL_QUESTION], "relevant": set(), "reference_answer": ref},
         )
         if int(row[COL_LABEL]) == 1:
             q["relevant"].add(doc_id)
@@ -63,7 +69,8 @@ def build_frozen_set(split: str, version: str, out_root: str | Path) -> Path:
         for qid, q in by_q.items():
             fh.write(json.dumps(
                 {"id": qid, "query": q["query"],
-                 "relevant_doc_ids": sorted(q["relevant"])},
+                 "relevant_doc_ids": sorted(q["relevant"]),
+                 "reference_answer": q.get("reference_answer")},
                 ensure_ascii=False) + "\n")
 
     manifest = {
