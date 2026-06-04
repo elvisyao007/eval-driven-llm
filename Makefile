@@ -38,7 +38,9 @@ compare:               # the real one: dense-only vs dense+cross-encoder on JQaR
 	$(PYTHON) -m elv.eval.runner --golden $(GOLDEN) --embedder ruri --compare --rerank cross-encoder --ks 5,10
 rag-eval:              # end-to-end faithfulness with a pinned LOCAL judge
 	$(PYTHON) -m elv.eval.rag_eval --golden $(GOLDEN) --embedder ruri --rerank cross-encoder \
-		--gen openai --judge local --base-url $(BASE_URL) --model $(GEN_MODEL) --judge-model $(JUDGE_MODEL)
+		--gen openai --judge local --base-url $(BASE_URL) --model $(GEN_MODEL) \
+		--judge-model $(JUDGE_MODEL) --judge-base-url $(JUDGE_BASE_URL) \
+		$(if $(MAX_QUERIES),--max-queries $(MAX_QUERIES),)
 
 # --- dirty-data ingestion (Track B): docs -> passages.jsonl + audit.json ---
 build-dirty-fixtures:

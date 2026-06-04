@@ -38,7 +38,7 @@ class OpenAICompatibleGenerator:
     """
 
     def __init__(self, model: str, base_url: str, temperature: float = 0.0,
-                 seed: int = 0, system: str = RAG_SYSTEM, timeout: int = 120) -> None:
+                 seed: int = 0, system: str = RAG_SYSTEM, timeout: int = 600) -> None:
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.temperature = temperature
@@ -46,23 +46,30 @@ class OpenAICompatibleGenerator:
         self.system = system
         self.timeout = timeout
 
-    def generate(self, prompt: str) -> str:
-        payload = {
+    def generate(self, prompt: str, max_tokens: int | None = None,
+                 stop: list[str] | None = None,
+                 timeout: int | None = None) -> str:
+        payload: dict = {
             "model": self.model,
             "temperature": self.temperature,
             "seed": self.seed,
+            "keep_alive": -1,   # prevent ollama from unloading mid-eval
             "messages": [
                 {"role": "system", "content": self.system},
                 {"role": "user", "content": prompt},
             ],
         }
+        if max_tokens is not None:
+            payload["max_tokens"] = max_tokens
+        if stop:
+            payload["stop"] = stop
         req = urllib.request.Request(
             f"{self.base_url}/chat/completions",
             data=json.dumps(payload).encode("utf-8"),
             headers={"Content-Type": "application/json"},
             method="POST",
         )
-        with urllib.request.urlopen(req, timeout=self.timeout) as resp:
+        with urllib.request.urlopen(req, timeout=timeout or self.timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         return data["choices"][0]["message"]["content"]
 

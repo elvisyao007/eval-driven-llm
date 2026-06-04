@@ -46,12 +46,22 @@ class LocalLLMJudge:
             model=model, base_url=base_url, temperature=temperature, seed=seed,
             system="あなたは厳密な評価者です。指示された形式のみで答えます。")
 
-    def extract_claims(self, question: str, answer: str) -> list[str]:
-        out = self.llm.generate(CLAIM_PROMPT.format(question=question, answer=answer))
-        return [ln.strip("・-* \t") for ln in out.splitlines() if ln.strip()]
+    def extract_claims(self, question: str, answer: str,
+                       timeout: int | None = None) -> list[str]:
+        # Stop sequences prevent the model from generating additional Q&A examples.
+        # max_tokens caps output so long answers don't run forever.
+        out = self.llm.generate(
+            CLAIM_PROMPT.format(question=question, answer=answer),
+            max_tokens=256, stop=["\n\n", "質問:", "回答:"],
+            timeout=timeout)
+        lines = [ln.strip("・-* 　\t") for ln in out.splitlines() if ln.strip()]
+        # Drop any lines that look like continuation prompts the model hallucinated
+        return [ln for ln in lines if not ln.startswith(("質問", "回答", "主張"))]
 
     def entails(self, context: str, claim: str) -> bool:
-        out = self.llm.generate(ENTAIL_PROMPT.format(context=context, claim=claim))
+        out = self.llm.generate(
+            ENTAIL_PROMPT.format(context=context, claim=claim),
+            max_tokens=8, stop=["\n"])
         return out.strip().lower().startswith("yes")
 
 
