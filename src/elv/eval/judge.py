@@ -44,7 +44,11 @@ class LocalLLMJudge:
         from elv.generate.client import OpenAICompatibleGenerator
         self.llm = OpenAICompatibleGenerator(
             model=model, base_url=base_url, temperature=temperature, seed=seed,
-            system="あなたは厳密な評価者です。指示された形式のみで答えます。")
+            system="あなたは厳密な評価者です。指示された形式のみで答えます。",
+            # thinking-capable models (Gemma 4, Qwen3) must have thinking disabled:
+            # reasoning tokens consume the max_tokens budget before the answer is
+            # emitted, leaving content empty and faithfulness = 0 for all queries.
+            disable_thinking=True)
 
     def extract_claims(self, question: str, answer: str,
                        timeout: int | None = None) -> list[str]:
@@ -59,9 +63,11 @@ class LocalLLMJudge:
         return [ln for ln in lines if not ln.startswith(("質問", "回答", "主張"))]
 
     def entails(self, context: str, claim: str) -> bool:
+        # No stop token: with thinking disabled, gemma4/qwen3 emit the answer
+        # directly without a trailing newline that stop=["\n"] would cut before.
         out = self.llm.generate(
             ENTAIL_PROMPT.format(context=context, claim=claim),
-            max_tokens=8, stop=["\n"])
+            max_tokens=16)
         return out.strip().lower().startswith("yes")
 
 

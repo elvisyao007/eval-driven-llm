@@ -21,10 +21,42 @@ from .judge import build_judge
 from .runner import _build_retriever, _load_golden_and_corpus, per_query_p1
 
 
+def _ollama_unload(model: str, base_url: str) -> None:
+    """Force-unload a model from VRAM via the native Ollama API (keep_alive=0).
+
+    Needed when gen and judge models don't fit in VRAM simultaneously and Ollama
+    won't auto-evict a resident model. Best-effort: silently ignored on non-Ollama
+    endpoints or if the endpoint is unreachable.
+    """
+    import urllib.request
+    ollama_base = base_url.rstrip("/")
+    # Strip the /v1 OpenAI-compat prefix to reach the native Ollama API.
+    if ollama_base.endswith("/v1"):
+        ollama_base = ollama_base[:-3]
+    payload = json.dumps({"model": model, "keep_alive": 0}).encode("utf-8")
+    try:
+        req = urllib.request.Request(
+            f"{ollama_base}/api/generate", data=payload,
+            headers={"Content-Type": "application/json"}, method="POST")
+        urllib.request.urlopen(req, timeout=30)
+        print(f"  unloaded {model} from VRAM", flush=True)
+    except Exception:
+        pass  # non-Ollama endpoint or already unloaded — safe to ignore
+
+
 def _prewarm(generator, judge, short_timeout: int = 30, retries: int = 10) -> None:
-    """Block until both endpoints respond — retry with short timeout so a cold
-    model-load after corpus indexing is absorbed rather than silently missed."""
+    """Block until both endpoints respond, prewarming one model at a time.
+
+    Generator is prewarmed first, then explicitly unloaded so the judge model can
+    load without VRAM contention (relevant when gen + judge don't fit together).
+    """
     import time
+    gen_model = getattr(generator, "model", None)
+    gen_url = getattr(generator, "base_url", None)
+    judge_inner = getattr(judge, "llm", None)
+    judge_model = getattr(judge_inner, "model", None) if judge_inner else None
+    judge_url = getattr(judge_inner, "base_url", None) if judge_inner else None
+
     for name, fn in [("generator", lambda: generator.generate("準備完了", max_tokens=8, timeout=short_timeout)),
                      ("judge", lambda: judge.extract_claims("テスト", "テスト", timeout=short_timeout))]:
         for attempt in range(retries):
@@ -37,27 +69,55 @@ def _prewarm(generator, judge, short_timeout: int = 30, retries: int = 10) -> No
                 print(f"  prewarm {name}: not ready ({exc.__class__.__name__}), "
                       f"retry {attempt+1}/{retries} in {wait}s…", flush=True)
                 time.sleep(wait)
+        # Unload each model immediately after prewarm so the next model can load.
+        # Both gen and judge are unloaded — the actual eval passes reload them.
+        if name == "generator" and gen_model and gen_url:
+            _ollama_unload(gen_model, gen_url)
+        elif name == "judge" and judge_model and judge_url:
+            _ollama_unload(judge_model, judge_url)
 
 
 def run_generation_eval(golden, retriever, generator, judge, k=5, runs_per_item=3):
+    """Two-pass eval: all generation first, then all judging.
+
+    Keeping gen and judge separated allows explicit VRAM unload between passes so
+    they don't have to coexist on a single GPU (gen model is unloaded before the
+    judge model loads). This is the correct design when gen != judge on constrained
+    hardware — not a workaround, since the two passes are logically independent.
+    """
     import datetime as _dt2
     from elv.generate.client import build_rag_prompt
 
     _prewarm(generator, judge)
-    faiths, recalls, flags, per_query = [], [], 0, {}
+
+    # ── Pass 1: generate all answers (gen model stays resident) ────────────────
+    print(f"  pass 1 / generation — {len(golden.queries)} queries", flush=True)
+    gen_model = getattr(generator, "model", None)
+    gen_url = getattr(generator, "base_url", None)
+    samples = []
     n = len(golden.queries)
     for qi, q in enumerate(golden.queries):
         if qi % 10 == 0:
-            print(f"  query {qi+1}/{n} ({_dt2.datetime.now():%H:%M:%S})", flush=True)
+            print(f"    gen {qi+1}/{n} ({_dt2.datetime.now():%H:%M:%S})", flush=True)
         ids = retriever.retrieve(q.query, k=k)
         contexts = [retriever._text_by_id.get(i, "") for i in ids]
-        # Stop at paragraph boundary so model doesn't invent additional passages/questions.
         answer = generator.generate(
             build_rag_prompt(q.query, contexts),
             max_tokens=256, stop=["\n\n[文脈", "\n\n質問", "\n\n回答"])
-        sample = mg.GenerationSample(
+        samples.append(mg.GenerationSample(
             query=q.query, answer=answer, contexts=contexts,
-            retrieved_doc_ids=ids, relevant_doc_ids=q.relevant_doc_ids)
+            retrieved_doc_ids=ids, relevant_doc_ids=q.relevant_doc_ids))
+
+    # Unload gen model before loading judge — avoids VRAM contention on single GPU.
+    if gen_model and gen_url:
+        _ollama_unload(gen_model, gen_url)
+
+    # ── Pass 2: judge all answers (judge model stays resident) ─────────────────
+    print(f"  pass 2 / judging  — {len(samples)} samples × {runs_per_item} runs", flush=True)
+    faiths, recalls, flags, per_query = [], [], 0, {}
+    for qi, (q, sample) in enumerate(zip(golden.queries, samples)):
+        if qi % 10 == 0:
+            print(f"    judge {qi+1}/{n} ({_dt2.datetime.now():%H:%M:%S})", flush=True)
         f = mg.faithfulness(sample, judge, runs_per_item=runs_per_item)
         r = mg.context_recall_docs(sample)
         flag = mg.grounded_but_wrong_flag(f.mean, r)
@@ -66,6 +126,7 @@ def run_generation_eval(golden, retriever, generator, judge, k=5, runs_per_item=
         flags += int(flag)
         per_query[q.id] = {"faithfulness": round(f.mean, 4), "faith_spread": round(f.spread, 4),
                            "context_recall_docs": round(r, 4), "grounded_but_wrong": flag}
+
     return {
         "faithfulness_mean": statistics.fmean(faiths) if faiths else 0.0,
         "faithfulness_max_spread": max((per_query[q]["faith_spread"] for q in per_query), default=0.0),

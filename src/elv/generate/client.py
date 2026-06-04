@@ -35,25 +35,34 @@ class OpenAICompatibleGenerator:
     temperature/seed are pinned so a run is reproducible from config; the real
     model still carries residual non-determinism, which the eval measures rather
     than hides (see metrics_generation / runs_per_item).
+
+    disable_thinking: when True, uses the Ollama native /api/chat endpoint with
+    think=false. Required for Gemma 4 / Qwen3 thinking models used as judges:
+    their reasoning tokens consume max_tokens before the answer is emitted, which
+    yields empty content on short max_tokens budgets. Ignored on non-Ollama
+    endpoints (no-op, not an error).
     """
 
     def __init__(self, model: str, base_url: str, temperature: float = 0.0,
-                 seed: int = 0, system: str = RAG_SYSTEM, timeout: int = 600) -> None:
+                 seed: int = 0, system: str = RAG_SYSTEM, timeout: int = 600,
+                 disable_thinking: bool = False) -> None:
         self.model = model
         self.base_url = base_url.rstrip("/")
         self.temperature = temperature
         self.seed = seed
         self.system = system
         self.timeout = timeout
+        self.disable_thinking = disable_thinking
 
     def generate(self, prompt: str, max_tokens: int | None = None,
                  stop: list[str] | None = None,
                  timeout: int | None = None) -> str:
+        if self.disable_thinking:
+            return self._generate_native_ollama(prompt, max_tokens, stop, timeout)
         payload: dict = {
             "model": self.model,
             "temperature": self.temperature,
             "seed": self.seed,
-            "keep_alive": -1,   # prevent ollama from unloading mid-eval
             "messages": [
                 {"role": "system", "content": self.system},
                 {"role": "user", "content": prompt},
@@ -72,6 +81,39 @@ class OpenAICompatibleGenerator:
         with urllib.request.urlopen(req, timeout=timeout or self.timeout) as resp:
             data = json.loads(resp.read().decode("utf-8"))
         return data["choices"][0]["message"]["content"]
+
+    def _generate_native_ollama(self, prompt: str, max_tokens: int | None,
+                                 stop: list[str] | None, timeout: int | None) -> str:
+        """Ollama native /api/chat with think=false for thinking-capable models."""
+        ollama_base = self.base_url
+        if ollama_base.endswith("/v1"):
+            ollama_base = ollama_base[:-3]
+        payload: dict = {
+            "model": self.model,
+            "think": False,
+            "stream": False,
+            "options": {
+                "temperature": self.temperature,
+                "seed": self.seed,
+            },
+            "messages": [
+                {"role": "system", "content": self.system},
+                {"role": "user", "content": prompt},
+            ],
+        }
+        if max_tokens is not None:
+            payload["options"]["num_predict"] = max_tokens
+        if stop:
+            payload["options"]["stop"] = stop
+        req = urllib.request.Request(
+            f"{ollama_base}/api/chat",
+            data=json.dumps(payload).encode("utf-8"),
+            headers={"Content-Type": "application/json"},
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=timeout or self.timeout) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+        return data["message"]["content"]
 
 
 class TemplateGenerator:

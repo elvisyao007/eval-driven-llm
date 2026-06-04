@@ -65,22 +65,45 @@ Full diagram and data flow: [`docs/architecture.md`](docs/architecture.md).
 
 | Layer | Choice | Why (short) |
 |---|---|---|
-| Generation | Gemma 4 (27B, quantized) + Gemma 3 / Swallow / ELYZA-JP for comparison | Apache-2.0, multilingual, fits a single 32 GB GPU; comparison models measure whether newer actually wins |
+| Generation | qwen3:32b (default) / gemma4:31b (comparison) via Ollama | Apache-2.0, multilingual, fit a single 32 GB GPU; both now on-prem |
+| Judge | gemma4:31b — **separate from generator** | Qwen judges Gemma output and vice versa; different families prevent self-grading |
 | Retrieval (1st pass) | ruri-v3-310m (dense) — BGE-M3 (dense+sparse) as hybrid option | Japanese-OSS retrieval SOTA; self-hosted, zero data egress |
 | Rerank (2nd pass) | BGE-Reranker-v2-m3 | two-stage retrieve → rerank for precision@1 |
-| Serving / gateway | vLLM (OpenAI-compatible) + LiteLLM | already part of the lab; swappable behind one interface |
+| Serving / gateway | Ollama (OpenAI-compatible at `:11434`) | both models resident; swappable behind one interface |
 | Vector store | Faiss (benchmark track) / Qdrant (realism track) | Qdrant carries metadata filtering for per-user permissions |
-| Eval | in-house deterministic retrieval metrics + RAGAS/DeepEval generation metrics (pinned judge) + frozen golden set | see [`DECISIONS.md`](DECISIONS.md) ADR-0001 |
+| Eval | in-house deterministic retrieval metrics + judge-based generation metrics (pinned independent judge) + frozen golden set | see [`DECISIONS.md`](DECISIONS.md) ADR-0001 |
 
 Everything above is a config entry, not a hard dependency. The only thing that
 is *not* meant to be swapped cheaply is the eval methodology.
 
 ## Eval results
 
-First run pending. Results land in [`reports/`](reports/) and follow the
-structure in [`docs/eval-report-template.md`](docs/eval-report-template.md).
-No numbers are published here until a run produces them — placeholder metrics
-defeat the entire purpose of this repo.
+Full run details: [`reports/SUMMARY.md`](reports/SUMMARY.md).
+
+**JQaRA v0 — retrieval (1667 queries, deterministic)**
+
+| Metric | dense-only | dense+rerank | delta |
+|---|---|---|---|
+| P@1 | 0.8308 | **0.8440** | +0.0132 |
+| Recall@5 | 0.4256 | 0.4158 | -0.0098 |
+| nDCG@10 | 0.6870 | 0.6770 | -0.0099 |
+
+Reranker lifts P@1 at the cost of recall — correct trade-off for single-answer QA.
+
+**JQaRA v0 — generation (100-query sample, independent judge)**
+
+| Metric | Value |
+|---|---|
+| faithfulness (mean, gemma4:31b judge) | **0.6662** |
+| faithfulness max spread (3 runs) | 0.0500 |
+| context_recall_docs (mean, deterministic) | **0.4062** |
+| grounded-but-wrong queries | **33 / 100** |
+
+Generator: `qwen3:32b`. Judge: `gemma4:31b` (different model family — not self-grading).
+The 0.41 context recall is the signal to act on: in 59% of queries the relevant
+document didn't reach the top-5, so the model answered from wrong evidence.
+33 queries are "grounded but wrong" — faithfulness looked fine but context recall
+revealed the answer was grounded in the wrong documents (ADR-0001 failure mode).
 
 ## How to run
 
@@ -104,9 +127,11 @@ make build-jqara        # freeze a JQaRA split -> golden set + corpus
 make eval GOLDEN=data/golden/jqara/v0   # ruri-v3 dense retrieval
 make compare GOLDEN=data/golden/jqara/v0  # dense-only vs dense+cross-encoder
 
-# end-to-end generation eval (faithfulness), pinned LOCAL judge:
+# end-to-end generation eval (faithfulness), independent LOCAL judge:
+# gen=qwen3:32b, judge=gemma4:31b — different model families, no self-grading
 make rag-eval GOLDEN=data/golden/jqara/v0 \
-     BASE_URL=http://localhost:8000/v1 GEN_MODEL=gemma4-27b-q JUDGE_MODEL=elyza-jp-8b
+     BASE_URL=http://localhost:11434/v1 GEN_MODEL=qwen3:32b \
+     JUDGE_MODEL=gemma4:31b JUDGE_BASE_URL=http://localhost:11434/v1 MAX_QUERIES=100
 ```
 
 Generation eval reports faithfulness (with judge variance) **next to** a

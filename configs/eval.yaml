@@ -21,10 +21,11 @@ gates:                 # regression gate thresholds (agreed before the run)
 
 generation:            # end-to-end RAG eval (rag_eval.py)
   k: 5                 # contexts passed to the generator
-  gen_model: gemma4-27b-q
-  # judge is a SEPARATE local model so it does not grade its own homework
-  judge_model: elyza-jp-8b
-  base_url: "http://localhost:8000/v1"   # local vLLM/LiteLLM; never a cloud API
+  gen_model: qwen3:32b
+  # judge is a SEPARATE local model so it does not grade its own homework.
+  # gen=qwen3:32b / judge=gemma4:31b — different families, no self-grading (ADR-0001).
+  judge_model: gemma4:31b
+  base_url: "http://localhost:11434/v1"  # Ollama OpenAI-compat; never a cloud API
   runs_per_item: 3     # repeat judging to measure variance, not hide it
   grounded_but_wrong:  # flag thresholds (read faithfulness vs context recall)
     faithfulness_high: 0.8

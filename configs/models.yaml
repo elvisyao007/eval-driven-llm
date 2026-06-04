@@ -2,13 +2,21 @@
 # on-prem / clean-license only; Chinese models are content-layer only.
 
 generation:
-  default: gemma4-27b-q      # Apache-2.0, multilingual, fits 32GB quantized
-  dev: gemma4-12b-q          # smaller/faster for eval-harness iteration
-  comparison:                # measure, don't assume: does Gemma 4 actually beat
-    - gemma3-27b-q           #   Gemma 3 on OUR task? the harness decides, not the changelog
-    - swallow-llama3.1
-    - elyza-jp-8b
-  serve: vllm                # OpenAI-compatible; behind LiteLLM gateway
+  default: gemma4:31b        # Apache-2.0, multilingual; on-prem via Ollama
+  dev: qwen3:32b             # Qwen3 32B; strong multilingual alternative
+  comparison:                # measure, don't assume: actual JQaRA scores decide
+    - gemma4:31b
+    - qwen3:32b
+  serve: ollama              # OpenAI-compatible at http://localhost:11434/v1
+
+# ── Phase 4 pinned judge ────────────────────────────────────────────────────
+# judge MUST differ from the generator (no self-grading).
+# Current pairing:  gen=qwen3:32b  judge=gemma4:31b  (different families ✓)
+judge:
+  default: gemma4:31b        # Gemma family judges Qwen output
+  temperature: 0.0
+  seed: 0
+  runs_per_item: 3           # repeat to measure spread, not hide it
 
 embedding:
   # in-sandbox / baseline: lexical, no downloads, deterministic

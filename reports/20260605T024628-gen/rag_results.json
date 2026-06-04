@@ -1,0 +1,623 @@
+{
+  "metadata": {
+    "date": "2026-06-05T02:46:28",
+    "golden": "jqara@v0",
+    "embedder": "ruri",
+    "reranker": "cross-encoder",
+    "generator": "openai",
+    "judge": "local",
+    "gen_model": "qwen3:32b",
+    "judge_model": "gemma4:31b",
+    "runs_per_item": 3,
+    "note": ""
+  },
+  "aggregate": {
+    "faithfulness_mean": 0.6661666666666666,
+    "faithfulness_max_spread": 0.05,
+    "context_recall_docs_mean": 0.40617395318259164,
+    "grounded_but_wrong_count": 33,
+    "n_queries": 100
+  },
+  "per_query": {
+    "QA20CAPR-1004": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1739,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1006": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1007": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1008": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1011": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4545,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1014": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2727,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1015": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0769,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1018": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1019": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1020": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3077,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1022": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1024": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1025": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1026": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3333,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1027": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4167,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1028": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1923,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1030": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4286,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1031": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1032": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1034": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4167,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1036": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1038": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 1.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1040": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1111,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1044": {
+      "faithfulness": 0.25,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.75,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1045": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.625,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1047": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3333,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1048": {
+      "faithfulness": 0.4,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.375,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1049": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1429,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1050": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3333,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1051": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2308,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1054": {
+      "faithfulness": 0.7833,
+      "faith_spread": 0.05,
+      "context_recall_docs": 0.6,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1055": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1058": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1060": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1061": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1065": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.8,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1066": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.8333,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1068": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3636,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1069": {
+      "faithfulness": 0.8,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.7143,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1070": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.375,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1071": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1072": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2222,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1073": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0833,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1074": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1075": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5714,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1076": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1079": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2381,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1080": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2857,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1082": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1083": {
+      "faithfulness": 0.75,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1084": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3333,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1086": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1087": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.15,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1088": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3636,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1089": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0909,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1090": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1091": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2632,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1092": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1093": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4286,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1094": {
+      "faithfulness": 0.8,
+      "faith_spread": 0.0,
+      "context_recall_docs": 1.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1095": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1097": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.75,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1098": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2857,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1099": {
+      "faithfulness": 0.25,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0556,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1104": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.6667,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1106": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2727,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1108": {
+      "faithfulness": 0.3333,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1333,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1109": {
+      "faithfulness": 0.75,
+      "faith_spread": 0.0,
+      "context_recall_docs": 1.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1110": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1923,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1111": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.75,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1113": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1114": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1116": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0714,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1118": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1119": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.16,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1120": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.3077,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1122": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1875,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1124": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.8,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1126": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2667,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1128": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1130": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.0714,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1131": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.25,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1132": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.625,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1134": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2174,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1136": {
+      "faithfulness": 0.3333,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1137": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 1.0,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1138": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1923,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1140": {
+      "faithfulness": 0.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4286,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1141": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5556,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1142": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2222,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1143": {
+      "faithfulness": 0.3333,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1538,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1144": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.1667,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1145": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.5,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1148": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.75,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1150": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.625,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1152": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.12,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1153": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.4545,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1155": {
+      "faithfulness": 1.0,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.2105,
+      "grounded_but_wrong": true
+    },
+    "QA20CAPR-1156": {
+      "faithfulness": 0.6667,
+      "faith_spread": 0.0,
+      "context_recall_docs": 0.8,
+      "grounded_but_wrong": false
+    },
+    "QA20CAPR-1158": {
+      "faithfulness": 0.5,
+      "faith_spread": 0.0,
+      "context_recall_docs": 1.0,
+      "grounded_but_wrong": false
+    }
+  }
+}
