@@ -376,3 +376,54 @@ was spent.
 (b) hit@k and proportion_recall diverge less, and (c) retrieval failures genuinely
 exist at hit@k=0 for a meaningful fraction of queries. Under those conditions the
 hybrid architecture and the pinned parameters in ADR-0007 are ready to use.
+
+---
+
+## ADR-0009 — blog-01/02 correction: grounded-but-wrong 33/100 is a metric artifact
+*Status: accepted · 2026-06-08*
+
+**Context.** blog-01 and blog-02 (both published on dev.to and Zenn) cite
+`grounded-but-wrong = 33/100` as evidence of a retrieval failure mode — faithful
+answers grounded in wrong documents. The metric analysis in commit 9600846
+(`reports/recall_metric_analysis.md`) proved this number is a structural artifact,
+not a signal of actual retrieval failure.
+
+**What the analysis showed.**
+
+- `context_recall_docs` is ID-based proportion recall: `|retrieved ∩ relevant| / |relevant|`
+  (NonLLMContextRecall / IDBasedContextRecall in RAGAS terminology; no LLM involved).
+- The 33 flagged queries have mean n_rel = 16.0; 28/33 have n_rel > 10.
+- At k=5, oracle proportion recall = 5/n_rel < 0.5 for any n_rel > 10 — the
+  `grounded_but_wrong_flag` threshold of 0.5 is **structurally impossible to clear
+  even with a perfect retriever** for these queries.
+- `hit@5` (binary: ≥1 relevant doc in top-5) = 98/100. The 2 queries with hit@5=0
+  both had faithfulness=0.0 and were not in the 33. Zero true retrieval failures.
+- All 33 grounded-but-wrong cases had hit@5=1; the model had relevant context
+  available for every one of them.
+
+**What is NOT affected.**
+
+- The blog-02 conclusion comparing self-grading (qwen3 judges itself) vs independent
+  judge (gemma4:31b) remains fully valid — that comparison used the same metric on
+  both runs, so the delta (0.7751 → 0.6662 faithfulness, zero spread → 0.05 spread)
+  is unaffected by the absolute metric choice.
+- The faithfulness numbers themselves are unaffected.
+- The retrieval benchmark (P@1, MRR, nDCG, recall@k from runner.py) is unaffected —
+  those metrics are correct for the retrieval task.
+
+**Correction plan (content, not code).**
+
+1. Publish blog-03 (full diagnostic: hit@k vs proportion recall on multi-answer data)
+   in English on dev.to first.
+2. Add an update note at the top of blog-01 and blog-02 on both dev.to and Zenn,
+   pointing readers to blog-03. Original text preserved; no silent edits.
+3. Publish Japanese Zenn translation of blog-03 after the English version is live.
+
+**No code changes required.** The `context_recall_docs` implementation is correctly
+named and correctly implemented for retrieval evaluation. The issue is the
+interpretation of the 0.5 threshold for a multi-answer reranking dataset used as a
+QA benchmark. The threshold is a hyperparameter in `grounded_but_wrong_flag`
+(`metrics_generation.py:89`), not a bug.
+
+**Revisit when.** A future dataset with low n_rel per query (≤ 3) would make
+proportion recall and hit@k converge, restoring the original interpretation.
