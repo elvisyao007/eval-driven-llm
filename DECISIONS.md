@@ -220,6 +220,14 @@ python scripts/ceiling_check.py --no-rank-dist    # ceiling only, no model neede
 Deterministic: re-runs produce identical numbers. Requires HuggingFace network
 access for JQaRA dataset; ruri-v3-310m embedder downloads on first run (~620 MB).
 
+**JQaRA relevance label (口径).**
+JQaRA uses binary relevance labels (0 / 1). The field is `label` in the dataset
+(`hotchpotch/JQaRA`, test split). A document is "relevant" if and only if
+`int(row["label"]) == 1` — identical to the threshold used in `adapters/jqara.py`
+to build `relevant_doc_ids` in the golden set, and therefore identical to the
+definition used in all `context_recall` calculations. No separate threshold
+decision is needed; there are no graded relevance levels.
+
 **Field definitions (canonical — must be used consistently in all subsequent steps).**
 
 - **binary_ceiling**: fraction of queries where ALL relevant docs appear in the
