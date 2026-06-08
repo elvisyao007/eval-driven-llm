@@ -304,3 +304,75 @@ Parameters must be declared here, not discovered post-hoc.
 
 **Revisit when.** A configuration change forces one of these values to shift;
 update this ADR with the new value and rationale before re-running.
+
+---
+
+## ADR-0008 — Hybrid experiment: archived, original motivation disproved
+*Status: accepted · 2026-06-08*
+
+**Context.** The hybrid retrieval experiment (EXPERIMENT_hybrid.md, ADR-0006/0007) was
+designed to improve `context_recall` from 0.41 and fix the 33/100 grounded-but-wrong
+queries identified in the Phase 4 generation eval. After completing Step 0 (ceiling
+gate) and the subsequent metric analysis, the core motivation was found to be invalid.
+
+**Full reasoning chain (sequential — each step built on the previous).**
+
+1. *Original motivation.* Two related problems drove the experiment:
+   - `context_recall_docs` (proportion recall) = 0.41 — appeared to show retrieval
+     failing on ~59% of queries.
+   - 33/100 grounded-but-wrong (faithfulness ≥ 0.8 AND proportion_recall < 0.5) —
+     appeared to show the model confabulating correct-sounding answers from wrong docs.
+
+2. *Step 0 ceiling gate (ADR-0006, `reports/ceiling_check.md`).* Computed oracle
+   recall@5 within JQaRA's fixed 100 candidates. Gap = oracle − current = +0.20 at
+   k=5, placing the experiment in the "≥0.15 → full experiment continues" bucket.
+   This gate passed and appeared to justify proceeding.
+
+3. *Gap decomposition (`reports/ceiling_check.md §5`).* Decomposed the +0.20 gap:
+   - k-truncation-locked: 0.35 (structurally unreachable at k=5; mean query has 9.7
+     relevant docs and k=5 holds only 5).
+   - Sorting-improvable: 0.22 (could be recovered by better ranking within candidates).
+   Rank distribution p50=1, p90=2 showed dense already ranks the first relevant doc
+   near the top. The headroom was structural, not a ranking problem.
+
+4. *Metric analysis (`reports/recall_metric_analysis.md`).* Computed `hit@5` (binary:
+   ≥1 relevant doc in top-5) alongside proportion recall for the 100-query Phase 4
+   sample. Results:
+   - hit@5 = 0.98 (98/100 queries had at least one relevant doc in top-5).
+   - Only 2 queries had hit@5=0; both had faithfulness=0.0 — the judge correctly
+     gave them no credit. No grounded-but-wrong cases among them.
+   - Of the 33 grounded-but-wrong queries: **0 true failures (hit@5=0), 33 metric
+     artifacts (hit@5≥1, proportion_recall < 0.5 due to large denominator)**.
+   - Root cause: 28 of the 33 queries have n_rel > 10. At k=5, oracle proportion
+     recall = 5/n < 0.5 — the grounded-but-wrong label was **structurally impossible
+     to remove even with a perfect retriever**. The 0.5 threshold was calibrated for
+     a low-n_rel dataset and is wrong for JQaRA (mean n_rel = 9.7).
+
+5. *Conclusion.* The two motivating problems were both metric artifacts, not pipeline
+   defects:
+   - `context_recall = 0.41` correctly measures retrieval completeness for a
+     reranking benchmark with ~10 relevant docs per query. It is not a failure signal
+     for QA sufficiency.
+   - `33/100 grounded-but-wrong` is 100% explained by the mismatch between the 0.5
+     threshold and JQaRA's multi-answer label density. The model had at least one
+     relevant document for 98% of queries.
+   Hybrid reranking could improve proportion_recall without changing hit@5 — it would
+   move the metric label without fixing an actual QA failure.
+
+**Decision.** Archive the hybrid experiment. Do not run configurations A0–H4/R0.
+`EXPERIMENT_hybrid.md` and ADR-0006/0007 are retained as a record of a
+**rational, evidence-driven cancellation** — the methodology (ceiling gate + metric
+audit) worked as designed; it correctly surfaced a bad premise before machine time
+was spent.
+
+**What remains useful from the spec.**
+- ADR-0007 pinned parameters (RRF k=60, SudachiPy mode C, MeCab IPAdic, α=0.5) remain
+  valid if BM25 configurations are ever revisited for a different task.
+- The H1/H2/A2 configurations (dense vs BM25-local IDF vs BM25-global IDF within
+  100 candidates) could serve as illustration data for a blog post on local-IDF
+  degradation in small candidate pools, if that topic becomes content-worthy.
+
+**Revisit when.** A new dataset or task where (a) n_rel per query is small (≤ 3),
+(b) hit@k and proportion_recall diverge less, and (c) retrieval failures genuinely
+exist at hit@k=0 for a meaningful fraction of queries. Under those conditions the
+hybrid architecture and the pinned parameters in ADR-0007 are ready to use.

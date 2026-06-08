@@ -1,5 +1,7 @@
 # EXPERIMENT_hybrid.md
 
+> **状态:ARCHIVED(2026-06)。动机经 `reports/recall_metric_analysis.md` 证伪,未执行。见 DECISIONS.md ADR-0008。**
+
 > 实验目标(诚实表述):在 JQaRA **固定 100 候选集**内,测稀疏-稠密互补性能否把正确文档排进 top-k(改善 context_recall),并将此结论与「第一阶段召回改善」明确切割。
 >
 > **本实验不能、也不会声称提升了第一阶段 recall。** JQaRA 是 reranking 数据集(每 query 100 候选),候选集由数据集固定给定,我们不做 full-corpus 检索。任何 context_recall 的变化都来自**重排序**,不是召回。这条约束必须一致地传播到 code / DECISIONS.md / README / blog。
