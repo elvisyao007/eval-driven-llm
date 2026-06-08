@@ -200,3 +200,99 @@ the right thing to invest in first.
 
 **Revisit when.** A concrete use case (from real inbound, not speculation)
 makes the agent requirements specific.
+
+---
+
+## ADR-0006 — Hybrid experiment Step 0: ceiling prior + field definitions
+*Status: accepted · 2026-06-08*
+
+**Context.** Before implementing hybrid retrieval configurations (A0–H4/R0 from
+`EXPERIMENT_hybrid.md`), we need to verify that the context_recall gap is a
+ranking problem (solvable by reranking within 100 candidates) rather than a
+candidate-coverage problem (where relevant docs are absent from the fixed 100,
+making any reranker helpless).
+
+**Script location.** `scripts/ceiling_check.py`. Run with:
+```
+python scripts/ceiling_check.py --embedder ruri   # full run with rank distribution
+python scripts/ceiling_check.py --no-rank-dist    # ceiling only, no model needed
+```
+Deterministic: re-runs produce identical numbers. Requires HuggingFace network
+access for JQaRA dataset; ruri-v3-310m embedder downloads on first run (~620 MB).
+
+**Field definitions (canonical — must be used consistently in all subsequent steps).**
+
+- **binary_ceiling**: fraction of queries where ALL relevant docs appear in the
+  JQaRA-assigned 100 candidates. For JQaRA test split this is always 1.0
+  (dataset construction guarantees). Reported as a validity check only.
+
+- **oracle_recall@k**: `mean over queries of min(|relevant|, k) / |relevant|`.
+  Since `|relevant ∩ candidates| = |relevant|` for JQaRA (binary_ceiling = 1.0),
+  this simplifies to `mean min(|relevant|, k) / |relevant|`. This is the maximum
+  achievable context_recall@k within the 100 candidates under a perfect reranker.
+
+- **dense_recall@k within 100**: actual recall@k when the 100 JQaRA candidates
+  are ranked by ruri-v3 cosine similarity (restricted pool). Uses the same
+  `recall_at_k` formula as `metrics_retrieval.py`. This is the correct baseline
+  for attributing hybrid improvement: delta above this number comes from BM25
+  complementing dense, not from switching from full-corpus to candidate-pool.
+
+- **current recall@k (full corpus)**: recall@k from the frozen eval reports,
+  full 144K corpus, dense-only or dense+rerank. Used to compute the gate gap.
+
+- **gap@k**: oracle_recall@k − current_recall@k (full corpus baseline). The
+  gate decision uses this number.
+
+**Step 0 results (frozen).**
+
+| Eval set | oracle@5 | dense@5 (within 100) | current@5 (full corpus) | gap@5 |
+|---|---|---|---|---|
+| gen (100 q) | 0.6113 | 0.4224 | 0.4062 | +0.2051 |
+| retrieval (1667 q) | 0.6489 | 0.4368 | 0.4256 | +0.2233 |
+
+Rank distribution within 100 candidates under ruri-v3 dense ordering:
+p50=1, p90=2, max=55–88 (first relevant doc already ranks very high).
+
+**Gate decision.** Both gaps are ≥ 0.15. Full hybrid experiment continues
+(all configurations A0–H4/R0 from `EXPERIMENT_hybrid.md §2`).
+
+**Critical nuance for Step 1+.** The p50 rank = 1 shows that the dense model
+already places the first relevant doc at the top within the 100 candidates for
+most queries. The gap to oracle (≈ 0.19) is **structural**: queries have 6–28
+relevant docs and k=5 can only surface 5. Hybrid BM25+dense may recover
+complementary relevant docs that dense alone missed; track delta against
+dense_recall@5_within_100 (≈ 0.42–0.44), not just the full-corpus baseline
+(0.41), to correctly attribute any improvement.
+
+**Revisit when.** A customer corpus with different candidate label density
+makes the structural ceiling analysis non-trivially different from JQaRA.
+
+---
+
+## ADR-0007 — Hybrid experiment: pinned parameters
+*Status: accepted · 2026-06-08*
+
+**Context.** Reproducibility requires pinning every free parameter before
+running Step 1. Undeclared choices (k in RRF, tokenizer mode, reranker range)
+become confounds that make results irreproducible and comparisons invalid.
+Parameters must be declared here, not discovered post-hoc.
+
+**Pinned parameters (immutable once Step 1 starts).**
+
+| Parameter | Value | Why |
+|---|---|---|
+| RRF k constant | 60 | Standard literature default (Cormack et al. 2009); rank-only, so k trades off top-rank vs tail sensitivity. 60 is the safe middle ground and the most-cited value. |
+| SudachiPy split mode | C (longest unit) | Mode C produces longest compound tokens — best coverage for Japanese IR; modes A/B fragment too aggressively and inflate term frequency noise. Confirmed available in the project venv. |
+| MeCab dictionary | IPAdic | Most common baseline for Japanese NLP; available on-prem without extra license. Enables like-for-like comparison with SudachiPy in A3 without introducing a second vocabulary variable. |
+| H4 reranker input range | top-20 of H1 or H2 fusion output | Cross-encoders are O(k) at inference; top-20 covers the oracle@k ceiling comfortably (p90 first-relevant rank ≤ 2) while keeping latency bounded. Applying to the full 100 would be ~5× slower for negligible tail gain. |
+| H3 weighted-norm α | 0.5 (dense : sparse = 50 : 50) | Fixed in advance; must not be tuned on the test set — that would be test-set overfitting and make H3 numbers incomparable to H1/H2 (which are parameter-free). 0.5 is the neutral uninformative prior. |
+| Bootstrap seed | 42 | Determinism; re-runs give identical CI bounds. |
+| Bootstrap resamples | 10 000 | Standard for 95% CI precision at this sample size (1667 queries). |
+
+**Verification gate (before Step 1 continues):**
+- Confirm `sudachipy` and `sudachipy-dictionary-small` importable in `.venv`
+- Confirm `mecab-python3` and `ipadic` importable in `.venv`
+- Run `ollama list` to record exact reranker model tag (BGE-reranker-v2-m3 variant)
+
+**Revisit when.** A configuration change forces one of these values to shift;
+update this ADR with the new value and rationale before re-running.
