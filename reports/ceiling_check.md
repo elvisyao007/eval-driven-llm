@@ -117,3 +117,112 @@ surface relevant docs that dense alone missed (complementary signals). But the
 denominator is fixed by JQaRA's label density, not by retrieval algorithm design.
 Track delta against dense_recall@5_within_100 (≈ 0.42–0.44), not just against
 the full-corpus baseline (0.41), to correctly attribute any improvement.
+
+---
+
+## 5. Gap decomposition — sorting-improvable vs k-truncation-locked
+
+> This section decomposes the ceiling gap (oracle_recall@k − current@k) into its
+> two structural components. No model is loaded; all numbers come from the golden
+> set (n_rel distribution) and the frozen eval reports (current recall).
+
+**Definitions:**
+- **sorting-improvable** = oracle_recall@k − current@k. Relevant docs are inside
+  the 100 JQaRA candidates but ranked below top-k by the current model. A better
+  ranker (hybrid or otherwise) could theoretically recover this.
+- **k-truncation-locked** = 1.0 − oracle_recall@k. For queries with n_rel > k,
+  even a perfect ranker cannot exceed k/n_rel recall. This portion is structurally
+  unreachable at the given k — increasing k is the only lever.
+
+The three components sum to 1.0 (full potential recall per query).
+
+### Retrieval eval set — all 1667 queries
+
+**n_rel distribution (relevant docs per query):**
+
+| stat | value |
+|---|---|
+| min | 1 |
+| p25 | 4 |
+| p50 | 8 |
+| p75 | 14 |
+| p90 | 21 |
+| max | 28 |
+| mean | 9.72 |
+
+Queries with n_rel ≤ 5 (oracle@5 = 1.0, k=5 not binding): **573 (34.4%)**  
+Queries with n_rel > 5 (oracle@5 = 5/n < 1.0, k=5 is binding): **1094 (65.6%)**
+— mean oracle@5 for the n>5 group: 0.4651
+
+**Recall budget breakdown at k=5 (three parts sum to 1.0):**
+
+| Component | @k=5 | @k=10 |
+|---|---|---|
+| currently achieved (full-corpus baseline) | 0.4256 | 0.5738 |
+| **sorting-improvable gap** (oracle − current) | **0.2233** | **0.2871** |
+| k-truncation-locked (1.0 − oracle) | 0.3511 | 0.1391 |
+| **sum** | **1.0000** | **1.0000** |
+
+The **sorting-improvable gap** is the maximum recall that any reranker
+working within the 100 JQaRA candidates could theoretically recover at k=5.
+The **k-truncation-locked** portion is structurally unreachable at k=5 regardless
+of ranking algorithm — it exists because the mean query has 9.7 relevant docs
+and k=5 can only surface 5 of them.
+
+**Effect of increasing k:**
+Raising k from 5 → 10 reduces k-truncation-locked from 0.3511 to 0.1391 (−0.2120)
+and raises oracle from 0.6489 to 0.8609 (+0.2120).
+The sorting gap also grows: 0.2233 → 0.2871.
+Increasing k yields more potential gain than better reranking at k=5.
+### Generation eval set — first 100 queries
+
+**n_rel distribution (relevant docs per query):**
+
+| stat | value |
+|---|---|
+| min | 1 |
+| p25 | 5 |
+| p50 | 9 |
+| p75 | 15 |
+| p90 | 23 |
+| max | 27 |
+| mean | 10.73 |
+
+Queries with n_rel ≤ 5 (oracle@5 = 1.0, k=5 not binding): **31 (31.0%)**  
+Queries with n_rel > 5 (oracle@5 = 5/n < 1.0, k=5 is binding): **69 (69.0%)**
+— mean oracle@5 for the n>5 group: 0.4367
+
+**Recall budget breakdown at k=5 (three parts sum to 1.0):**
+
+| Component | @k=5 | @k=10 |
+|---|---|---|
+| currently achieved (full-corpus baseline) | 0.4062 | n/a |
+| **sorting-improvable gap** (oracle − current) | **0.2051** | n/a |
+| k-truncation-locked (1.0 − oracle) | 0.3887 | n/a |
+| **sum** | **1.0000** | n/a |
+
+The **sorting-improvable gap** is the maximum recall that any reranker
+working within the 100 JQaRA candidates could theoretically recover at k=5.
+The **k-truncation-locked** portion is structurally unreachable at k=5 regardless
+of ranking algorithm — it exists because the mean query has 9.7 relevant docs
+and k=5 can only surface 5 of them.
+
+**Effect of increasing k:**
+oracle@10 = 0.8337 vs oracle@5 = 0.6113 (+0.2224); k-truncation-locked@10 = 0.1663.
+No k=10 current@5 baseline exists for this eval set (generation eval used k=5 only).
+
+**Per-query gap decomposition by n_rel group (gen set only; current from rag_results.json dense+rerank):**
+
+| Query group | n queries | mean sorting gap@5 |
+|---|---|---|
+| n_rel ≤ 5 (oracle=1.0) | 31 | 0.3866 |
+| n_rel > 5 (oracle<1.0) | 69 | 0.1236 |
+| all queries | 100 | 0.2051 |
+
+The n_rel≤5 group has a **larger** mean sorting gap (0.39 vs 0.12): missing
+even one of two relevant docs costs 0.5 recall to the oracle=1.0 ceiling.
+For n_rel>5 queries dense already sits close to its structural oracle (5/n),
+so the per-query sorting headroom is smaller.
+
+**One-line summary:**
+Hybrid reranking within 100 candidates can theoretically recover at most **0.2233** recall@5 (the sorting-improvable gap). A further **0.3511** is k-truncation-locked and unreachable at k=5 regardless of algorithm. Raising k to 10 reduces the locked portion to 0.1391.
