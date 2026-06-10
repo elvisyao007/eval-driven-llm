@@ -169,8 +169,7 @@ tests/          pytest smoke gate (CI-style)
 
 ## License
 
-Intended: Apache-2.0 (permissive, commercial-friendly). Add a `LICENSE` file
-before publishing. Note: third-party models and datasets carry their own
-licenses — verify each (e.g. Gemma terms, Llama community license for
+Apache-2.0 — see [`LICENSE`](LICENSE). Third-party models and datasets carry
+their own licenses — verify each (e.g. Gemma terms, Llama community license for
 ELYZA/Swallow, dataset licenses for any committed golden set) before
 redistribution.
