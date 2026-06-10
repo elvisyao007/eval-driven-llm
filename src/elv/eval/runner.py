@@ -133,6 +133,17 @@ def write_comparison_report(out_dir, metadata, baseline, tuned, p1_base, p1_tune
     return report
 
 
+def _run_sanity_gate(golden: GoldenSet, out_dir: str) -> None:
+    """Write sanity.txt to out_dir; uses eval-sanity if installed, else skips."""
+    out = Path(out_dir) / "sanity.txt"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    try:
+        from eval_sanity import sanity_report  # type: ignore[import]
+        sanity_report(golden, out=str(out))
+    except ImportError:
+        out.write_text("eval-sanity not installed — gate skipped\n", encoding="utf-8")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--golden", required=True, help="data/golden/<name>/<version>")
@@ -151,6 +162,8 @@ def main():
     ts = args.out or f"reports/{_dt.datetime.now():%Y%m%dT%H%M%S}"
     baseline_note = ("lexical/baseline plumbing run — NOT a model benchmark"
                      if args.embedder in ("hashing", "lexical", "dummy") else "")
+
+    _run_sanity_gate(golden, ts)
 
     if args.compare:
         rr = args.rerank if args.rerank != "none" else "lexical"

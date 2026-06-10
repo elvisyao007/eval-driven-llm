@@ -10,6 +10,7 @@ dependencies = []
 
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+sanity = ["eval-sanity>=0.2"]
 # in-sandbox / baseline loop (deterministic, no model downloads)
 base = ["numpy", "faiss-cpu"]
 # production semantic stack (downloads model weights on the target machine)
