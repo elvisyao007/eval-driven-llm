@@ -96,14 +96,33 @@ Reranker lifts P@1 at the cost of recall — correct trade-off for single-answer
 |---|---|
 | faithfulness (mean, gemma4:31b judge) | **0.6662** |
 | faithfulness max spread (3 runs) | 0.0500 |
-| context_recall_docs (mean, deterministic) | **0.4062** |
-| grounded-but-wrong queries | **33 / 100** |
+| proportion_recall@5 (mean, deterministic) | **0.4062** |
+| oracle proportion_recall@5 ceiling (within 100 candidates) | **0.6113** |
+| hit@5 (≥1 relevant doc in top-5) | **0.98** (98 / 100 queries) |
+| grounded-but-wrong queries (original flag) | 33 / 100 — metric artifact (see ADR-0009) |
 
 Generator: `qwen3:32b`. Judge: `gemma4:31b` (different model family — not self-grading).
-The 0.41 context recall is the signal to act on: in 59% of queries the relevant
-document didn't reach the top-5, so the model answered from wrong evidence.
-33 queries are "grounded but wrong" — faithfulness looked fine but context recall
-revealed the answer was grounded in the wrong documents (ADR-0001 failure mode).
+
+**ADR-0009 correction.** `proportion_recall@5 = 0.4062` correctly measures
+retrieval completeness for this reranking benchmark but is **not** a QA-failure
+signal. JQaRA queries have 6–28 relevant documents (mean 9.7); the structural
+ceiling at k=5 is **0.6113** — unreachable even with a perfect reranker, because
+k=5 can surface at most 5 of ~10 relevant documents.
+
+`hit@5 = 0.98`: 98 of 100 queries had at least one relevant document in the
+top-5 context window. The 2 queries with hit@5=0 both had faithfulness=0.0 —
+the judge correctly gave them no credit.
+
+The **33 "grounded-but-wrong" queries** (faithfulness ≥ 0.8 AND
+proportion_recall < 0.5) are **100% metric artifacts**: all 33 had hit@5=1
+(relevant context was present). 28 of 33 have n_rel > 10, making proportion_recall
+< 0.5 structurally inevitable at k=5 even for a perfect retriever. At the hit@5
+threshold, grounded-but-wrong = **0 / 100**. The number is real; the original
+interpretation ("retrieval fed wrong documents") was wrong.
+
+Full diagnostic: [`reports/recall_metric_analysis.md`](reports/recall_metric_analysis.md) ·
+[ADR-0008/0009](DECISIONS.md) · blog-03 (forthcoming on dev.to) ·
+[eval-sanity](https://github.com/elvisyao007/eval-sanity)
 
 ## How to run
 
