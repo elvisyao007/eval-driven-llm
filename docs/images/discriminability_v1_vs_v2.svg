@@ -1,0 +1,63 @@
+<svg viewBox="0 0 640 340" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Benchmark discriminability: v1 vs v2</title>
+<desc>Stacked bar chart. v1 (20 questions): 90% all correct, 10% some correct, 0% none correct. v2 (45 questions): 29% all correct, 51% some correct, 20% none correct. v2 has meaningful discriminability; v1 does not.</desc>
+
+<rect width="640" height="340" fill="white"/>
+
+<!-- legend -->
+<rect x="40" y="20" width="12" height="12" rx="2" fill="#1D9E75"/>
+<text x="58" y="31" font-family="system-ui,sans-serif" font-size="12" fill="#5F5E5A">all models correct</text>
+<rect x="188" y="20" width="12" height="12" rx="2" fill="#EF9F27"/>
+<text x="206" y="31" font-family="system-ui,sans-serif" font-size="12" fill="#5F5E5A">some correct</text>
+<rect x="300" y="20" width="12" height="12" rx="2" fill="#D85A30"/>
+<text x="318" y="31" font-family="system-ui,sans-serif" font-size="12" fill="#5F5E5A">none correct</text>
+
+<!-- y-axis labels -->
+<text x="32" y="68" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="end">100%</text>
+<text x="32" y="118" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="end">75%</text>
+<text x="32" y="168" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="end">50%</text>
+<text x="32" y="218" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="end">25%</text>
+<text x="32" y="268" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="end">0%</text>
+
+<!-- grid lines -->
+<line x1="40" y1="66" x2="580" y2="66" stroke="#E8E7E0" stroke-width="0.5"/>
+<line x1="40" y1="116" x2="580" y2="116" stroke="#E8E7E0" stroke-width="0.5"/>
+<line x1="40" y1="166" x2="580" y2="166" stroke="#E8E7E0" stroke-width="0.5"/>
+<line x1="40" y1="216" x2="580" y2="216" stroke="#E8E7E0" stroke-width="0.5"/>
+<line x1="40" y1="266" x2="580" y2="266" stroke="#E8E7E0" stroke-width="0.5"/>
+
+<!-- v1 bar: 90% green / 10% amber / 0% red -->
+<!-- total height = 200px (66 to 266), 1% = 2px -->
+<!-- green: 90% = 180px, from y=86 to y=266 -->
+<rect x="120" y="86" width="140" height="180" rx="4" fill="#1D9E75"/>
+<!-- amber: 10% = 20px, from y=66 to y=86 -->
+<rect x="120" y="66" width="140" height="20" rx="4" fill="#EF9F27"/>
+
+<!-- value labels v1 -->
+<text x="190" y="172" font-family="system-ui,sans-serif" font-size="14" font-weight="500" fill="white" text-anchor="middle">90%</text>
+<text x="190" y="80" font-family="system-ui,sans-serif" font-size="12" fill="white" text-anchor="middle">10%</text>
+
+<!-- v2 bar: 29% green / 51% amber / 20% red -->
+<!-- green: 29% = 58px -->
+<!-- amber: 51% = 102px -->
+<!-- red:   20% = 40px -->
+<!-- stacked bottom-up: red at top (66), amber middle, green at bottom -->
+<!-- red: y=66, height=40 -->
+<rect x="360" y="66" width="140" height="40" rx="4" fill="#D85A30"/>
+<!-- amber: y=106, height=102 -->
+<rect x="360" y="106" width="140" height="102" fill="#EF9F27"/>
+<!-- green: y=208, height=58 -->
+<rect x="360" y="208" width="140" height="58" rx="4" fill="#1D9E75"/>
+
+<!-- value labels v2 -->
+<text x="430" y="91" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="white" text-anchor="middle">20%</text>
+<text x="430" y="162" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="white" text-anchor="middle">51%</text>
+<text x="430" y="242" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="white" text-anchor="middle">29%</text>
+
+<!-- x-axis labels -->
+<text x="190" y="288" font-family="system-ui,sans-serif" font-size="13" fill="#444441" text-anchor="middle" font-weight="500">v1 (20 questions)</text>
+<text x="430" y="288" font-family="system-ui,sans-serif" font-size="13" fill="#444441" text-anchor="middle" font-weight="500">v2 (45 questions)</text>
+
+<!-- caption -->
+<text x="320" y="318" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">a benchmark where every model answers most questions correctly cannot distinguish between models</text>
+</svg>

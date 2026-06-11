@@ -1,0 +1,68 @@
+<svg viewBox="0 0 680 310" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>v2 model comparison: quality, latency, VRAM</title>
+<desc>Table comparing four local Japanese LLMs. gemma4-31b: hit rate 0.622, 71 tok/s, 20GB VRAM. nemotron-nano-9b-jp: hit rate 0.622 (tied), 190 tok/s, 11GB VRAM — highlighted as best constrained choice. swallow-8b: 0.533, 190 tok/s, 10GB. elyza-jp-8b: 0.400, 280 tok/s, 6GB.</desc>
+
+<rect width="680" height="310" fill="white"/>
+
+<!-- header row -->
+<rect x="20" y="20" width="640" height="36" rx="6" fill="#F1EFE8"/>
+<text x="36" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A">model</text>
+<text x="230" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A" text-anchor="middle">params</text>
+<text x="310" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A" text-anchor="middle">hit rate</text>
+<text x="390" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A" text-anchor="middle">tok/s (warm)</text>
+<text x="475" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A" text-anchor="middle">VRAM</text>
+<text x="570" y="43" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A" text-anchor="middle">best for</text>
+
+<!-- row 1: gemma4-31b -->
+<rect x="20" y="56" width="640" height="44" rx="0" fill="white"/>
+<line x1="20" y1="100" x2="660" y2="100" stroke="#E8E7E0" stroke-width="0.5"/>
+<text x="36" y="83" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">gemma4-31b</text>
+<text x="230" y="83" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">31.3B</text>
+<rect x="282" y="68" width="56" height="22" rx="4" fill="#EAF3DE"/>
+<text x="310" y="83" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#3B6D11" text-anchor="middle">0.622</text>
+<text x="390" y="83" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">71</text>
+<text x="475" y="83" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">~20 GB</text>
+<text x="570" y="78" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">max quality,</text>
+<text x="570" y="92" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">VRAM unconstrained</text>
+
+<!-- row 2: nemotron — highlighted -->
+<rect x="20" y="100" width="640" height="52" rx="0" fill="#E6F1FB"/>
+<line x1="20" y1="152" x2="660" y2="152" stroke="#B5D4F4" stroke-width="0.5"/>
+<text x="36" y="122" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#185FA5">nemotron-nano-9b-jp  ★</text>
+<text x="36" y="138" font-family="system-ui,sans-serif" font-size="11" fill="#378ADD">tied 31B quality at half the VRAM</text>
+<text x="230" y="129" font-family="system-ui,sans-serif" font-size="12" fill="#185FA5" text-anchor="middle">8.9B</text>
+<rect x="282" y="116" width="56" height="22" rx="4" fill="#EAF3DE"/>
+<text x="310" y="131" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#3B6D11" text-anchor="middle">0.622</text>
+<text x="390" y="129" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#185FA5" text-anchor="middle">190</text>
+<text x="475" y="129" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#185FA5" text-anchor="middle">~11 GB</text>
+<text x="570" y="124" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">VRAM ≤16 GB or</text>
+<text x="570" y="138" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">latency-sensitive</text>
+
+<!-- row 3: swallow-8b -->
+<rect x="20" y="152" width="640" height="44" rx="0" fill="white"/>
+<line x1="20" y1="196" x2="660" y2="196" stroke="#E8E7E0" stroke-width="0.5"/>
+<text x="36" y="179" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">swallow-8b</text>
+<text x="230" y="179" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">8.0B</text>
+<text x="310" y="179" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">0.533</text>
+<text x="390" y="179" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">190</text>
+<text x="475" y="179" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">~10 GB</text>
+<text x="570" y="174" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">JP-tuned,</text>
+<text x="570" y="188" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">budget VRAM</text>
+
+<!-- row 4: elyza-jp-8b -->
+<rect x="20" y="196" width="640" height="44" rx="0" fill="white"/>
+<text x="36" y="223" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">elyza-jp-8b</text>
+<text x="230" y="223" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">8.0B</text>
+<text x="310" y="223" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">0.400</text>
+<text x="390" y="223" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">280</text>
+<text x="475" y="223" font-family="system-ui,sans-serif" font-size="12" fill="#888780" text-anchor="middle">~6 GB</text>
+<text x="570" y="218" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">6 GB VRAM</text>
+<text x="570" y="232" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">ceiling</text>
+
+<!-- outer border -->
+<rect x="20" y="20" width="640" height="220" rx="6" fill="none" stroke="#D3D1C7" stroke-width="0.5"/>
+
+<!-- footnote -->
+<text x="340" y="262" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">★ 45-question sample — treat nemotron tie as a lead, not a verdict · judge: qwen3:32b (not a contestant) · RTX 5090 32 GB</text>
+<text x="340" y="278" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">hit rate spread: 0.22 (v1: 0.10) · judge agreement κ = 0.920 (v1 κ=1.0 was zero-variance artifact)</text>
+</svg>

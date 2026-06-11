@@ -1,0 +1,84 @@
+<svg viewBox="0 0 680 420" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Constraint-based local LLM selection decision tree</title>
+<desc>Decision tree for selecting a local Japanese LLM. Start with VRAM ceiling. Under 8GB: elyza-jp-8b. Under 16GB: if latency-sensitive choose nemotron-nano-9b-jp, otherwise swallow-8b. Under 32GB: nemotron or swallow. Unconstrained: gemma4-31b.</desc>
+
+<rect width="680" height="420" fill="white"/>
+
+<defs>
+<marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 2L8 5L2 8" fill="none" stroke="#888780" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+
+<!-- start node -->
+<rect x="220" y="14" width="240" height="50" rx="8" fill="#F1EFE8" stroke="#D3D1C7" stroke-width="0.5"/>
+<text x="340" y="36" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A" text-anchor="middle">what is your deployment constraint?</text>
+<text x="340" y="53" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">start here</text>
+
+<line x1="340" y1="64" x2="340" y2="92" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+
+<!-- VRAM question -->
+<rect x="206" y="92" width="268" height="48" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+<text x="340" y="113" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#3C3489" text-anchor="middle">VRAM ceiling?</text>
+<text x="340" y="130" font-family="system-ui,sans-serif" font-size="11" fill="#534AB7" text-anchor="middle">how much GPU memory is available</text>
+
+<!-- branches from VRAM -->
+<line x1="230" y1="116" x2="108" y2="188" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="148" y="158" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">≤ 8 GB</text>
+
+<line x1="290" y1="140" x2="252" y2="194" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="254" y="178" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">≤ 16 GB</text>
+
+<line x1="410" y1="140" x2="448" y2="194" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="446" y="178" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">≤ 32 GB</text>
+
+<line x1="460" y1="116" x2="578" y2="188" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="544" y="158" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">unconstrained</text>
+
+<!-- leaf: elyza -->
+<rect x="44" y="190" width="128" height="58" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+<text x="108" y="213" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#085041" text-anchor="middle">elyza-jp-8b</text>
+<text x="108" y="229" font-family="system-ui,sans-serif" font-size="11" fill="#0F6E56" text-anchor="middle">~6 GB · 280 tok/s</text>
+<text x="108" y="243" font-family="system-ui,sans-serif" font-size="11" fill="#0F6E56" text-anchor="middle">hit rate 0.400</text>
+
+<!-- ≤16GB sub-question -->
+<rect x="196" y="194" width="160" height="46" rx="8" fill="#EEEDFE" stroke="#AFA9EC" stroke-width="0.5"/>
+<text x="276" y="213" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#3C3489" text-anchor="middle">latency-sensitive?</text>
+<text x="276" y="230" font-family="system-ui,sans-serif" font-size="11" fill="#534AB7" text-anchor="middle">throughput a priority?</text>
+
+<!-- ≤32GB: nemotron or swallow -->
+<rect x="372" y="194" width="152" height="58" rx="8" fill="#E6F1FB" stroke="#85B7EB" stroke-width="0.5"/>
+<text x="448" y="217" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#0C447C" text-anchor="middle">nemotron or swallow</text>
+<text x="448" y="233" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">~11–10 GB · fast</text>
+<text x="448" y="247" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">0.622 / 0.533</text>
+
+<!-- leaf: gemma4 -->
+<rect x="536" y="190" width="128" height="58" rx="8" fill="#FAECE7" stroke="#F0997B" stroke-width="0.5"/>
+<text x="600" y="213" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#4A1B0C" text-anchor="middle">gemma4-31b</text>
+<text x="600" y="229" font-family="system-ui,sans-serif" font-size="11" fill="#712B13" text-anchor="middle">~20 GB · 71 tok/s</text>
+<text x="600" y="243" font-family="system-ui,sans-serif" font-size="11" fill="#712B13" text-anchor="middle">hit rate 0.622</text>
+
+<!-- sub-branches from ≤16GB -->
+<line x1="248" y1="240" x2="210" y2="296" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="218" y="278" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">yes</text>
+
+<line x1="304" y1="240" x2="342" y2="296" stroke="#888780" stroke-width="1" marker-end="url(#a)"/>
+<text x="338" y="278" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A" text-anchor="middle">no</text>
+
+<!-- leaf: nemotron (latency yes) -->
+<rect x="148" y="298" width="128" height="62" rx="8" fill="#E6F1FB" stroke="#378ADD" stroke-width="1"/>
+<text x="212" y="320" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#042C53" text-anchor="middle">nemotron-nano-9b-jp</text>
+<text x="212" y="336" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">190 tok/s · ~11 GB</text>
+<text x="212" y="352" font-family="system-ui,sans-serif" font-size="11" fill="#185FA5" text-anchor="middle">★ ties 31B quality</text>
+
+<!-- leaf: swallow (latency no) -->
+<rect x="294" y="298" width="116" height="62" rx="8" fill="#E1F5EE" stroke="#5DCAA5" stroke-width="0.5"/>
+<text x="352" y="320" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#085041" text-anchor="middle">swallow-8b</text>
+<text x="352" y="336" font-family="system-ui,sans-serif" font-size="11" fill="#0F6E56" text-anchor="middle">190 tok/s · ~10 GB</text>
+<text x="352" y="352" font-family="system-ui,sans-serif" font-size="11" fill="#0F6E56" text-anchor="middle">JP-tuned · 0.533</text>
+
+<!-- footnote -->
+<rect x="20" y="380" width="640" height="30" rx="6" fill="#F1EFE8"/>
+<text x="340" y="392" font-family="system-ui,sans-serif" font-size="10" fill="#888780" text-anchor="middle">★ nemotron tied gemma4-31b (0.622) at ~half the VRAM — 45-question sample, treat as lead not verdict</text>
+<text x="340" y="404" font-family="system-ui,sans-serif" font-size="10" fill="#888780" text-anchor="middle">judge: qwen3:32b (not a contestant) · RTX 5090 32 GB · Ollama Q4_K_M</text>
+</svg>
