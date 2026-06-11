@@ -1,0 +1,171 @@
+{
+  "metadata": {
+    "version": "1.0",
+    "created": "2026-06-12",
+    "n_questions": 20,
+    "sources": ["02_mof_budget_fy2025.pdf", "03_stat_kakei_2023.pdf", "04_mof_fiscal_202510.pdf"],
+    "note": "15-20 questions covering numerical facts, category names, and comparative data from public Japanese government PDFs. Answers verified against the original PDFs. No customer data."
+  },
+  "questions": [
+    {
+      "id": "Q01",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度の一般歳出の総額は何億円か？",
+      "answer": "682,452億円",
+      "answer_keywords": ["682,452", "一般歳出"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q02",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度予算における社会保障関係費はいくらか？",
+      "answer": "382,778億円",
+      "answer_keywords": ["382,778", "社会保障関係費"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q03",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度の国債費はいくらか？",
+      "answer": "282,179億円",
+      "answer_keywords": ["282,179", "国債費"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q04",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度の税収見込みはいくらか？",
+      "answer": "784,400億円",
+      "answer_keywords": ["784,400", "税収"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q05",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度の公債金（借入額）は何億円か？",
+      "answer": "286,490億円",
+      "answer_keywords": ["286,490", "公債金"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q06",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度の防衛力整備計画対象経費はいくらか？",
+      "answer": "84,748億円",
+      "answer_keywords": ["84,748", "防衛力整備"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q07",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和6年度から7年度にかけて地方交付税交付金等はどれだけ増加したか？",
+      "answer": "+12,921億円の増加",
+      "answer_keywords": ["12,921", "地方交付税"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q08",
+      "source": "03_stat_kakei_2023.pdf",
+      "question": "家計調査報告は何年（令和何年）の平均結果の概要か？",
+      "answer": "2023年（令和5年）",
+      "answer_keywords": ["令和５年", "2023年"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q09",
+      "source": "03_stat_kakei_2023.pdf",
+      "question": "この家計調査における調査の対象世帯は何か？",
+      "answer": "二人以上の世帯",
+      "answer_keywords": ["二人以上の世帯"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q10",
+      "source": "03_stat_kakei_2023.pdf",
+      "question": "家計調査で通信費が減少した理由として挙げられているのは何か？",
+      "answer": "携帯電話の低廉料金への移行",
+      "answer_keywords": ["携帯電話", "低廉料金", "通信"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q11",
+      "source": "03_stat_kakei_2023.pdf",
+      "question": "家計調査報告の「目次」にある章は全部でいくつ存在するか？",
+      "answer": "Ⅰ（二人以上の世帯）、Ⅱ（総世帯及び単身世帯）の2章",
+      "answer_keywords": ["Ⅰ", "Ⅱ", "目次"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q12",
+      "source": "03_stat_kakei_2023.pdf",
+      "question": "2023年家計調査における統計の数字で、内訳の合計が一致しない場合の理由は何か？",
+      "answer": "四捨五入のため",
+      "answer_keywords": ["四捨五入", "合計"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q13",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "日本の財政関係資料は令和何年何月のものか？",
+      "answer": "令和7年10月",
+      "answer_keywords": ["令和７年", "10月", "財政関係資料"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q14",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "財政関係資料の目次に出てくる「国の財務書類」の章番号は何か？",
+      "answer": "Ⅱ（第２部）",
+      "answer_keywords": ["財務書類", "Ⅱ"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q15",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "令和7年度の一般会計における公債依存度はどの節（章）で説明されているか？",
+      "answer": "３番（公債発行額、公債依存度の推移）",
+      "answer_keywords": ["公債発行額", "公債依存度"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q16",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "OECD諸国との比較として取り上げられている指標は何か？",
+      "answer": "社会保障支出と国民負担率の関係",
+      "answer_keywords": ["OECD", "社会保障支出", "国民負担率"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q17",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "財政関係資料の第２部が扱うテーマは何か？",
+      "answer": "令和7年度予算等について",
+      "answer_keywords": ["第２部", "令和７年度予算"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q18",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "普通国債残高の「累増」を取り扱う節の番号は何か？",
+      "answer": "４番（普通国債残高の累増）",
+      "answer_keywords": ["普通国債残高", "累増"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q19",
+      "source": "02_mof_budget_fy2025.pdf",
+      "question": "令和7年度予算で特例公債（赤字公債）はいくらか？",
+      "answer": "218,580億円",
+      "answer_keywords": ["218,580", "特例公債", "赤字公債"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q20",
+      "source": "04_mof_fiscal_202510.pdf",
+      "question": "財政のPDCAサイクルに関連する「国の財務書類」の形式は何か？",
+      "answer": "一般会計・特別会計及び「連結」",
+      "answer_keywords": ["一般会計", "特別会計", "連結", "財務書類"],
+      "answer_page_hint": 1
+    }
+  ]
+}
