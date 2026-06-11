@@ -622,3 +622,72 @@ A floor above ~30% signals the golden set is too hard and produces noisy signals
 **Revisit when.** A new golden set is designed for a different task domain, or if the
 all-wrong rate rises above 30% (indicating the floor is too high and scores become
 noise-dominated rather than capability-dominated).
+
+---
+
+## ADR-0014 — DeepDoc 独立モジュール採用: 完全 RAGFlow スタックを起動しない理由
+
+**日付**: 2026-06-12  
+**ステータス**: 採用 (Phase 1 完了)
+
+### 背景
+China bridge コンテンツシリーズの技術基盤として、日本語 PDF の解析品質を評価する必要が生じた。RAGFlow には深層文書理解モジュール (DeepDoc) が含まれており、OCR・レイアウト認識・表構造認識 (TSR) を提供する。
+
+### 制約
+- Ollama (qwen3:32b / gemma4:31b) が常駐しているため、追加の重いサービスを同居させるとメモリ競合が起きる。
+- Elasticsearch・Redis・MinIO は eval の目的には不要であり、起動コストとネットワーク依存を増やすだけ。
+- セキュリティ・監査の観点でサービス境界を最小にする (CLAUDE.md の "enterprise reality" 原則)。
+
+### 検討した選択肢
+
+| 選択肢 | 却下理由 |
+|--------|----------|
+| 完全 RAGFlow スタック (Docker Compose) | ES/Redis/MinIO/Web UI が必須で起動コスト大、Ollama と競合 |
+| RAGFlow の API サーバーのみ | 依然として ES + Redis が必要、SDK 版でも同様 |
+| **DeepDoc 独立モジュール (採用)** | `deepdoc/vision` + `deepdoc/parser` のみ; サービス依存ゼロ |
+| MinerU / PaddleOCR | v2 横評価のスコープ; Phase 1 は DeepDoc 単独で充分 |
+
+### 採用した設計
+
+- `git sparse-checkout` で `deepdoc/`, `common/`, `rag/` のみ取得。  
+  (`/mnt/data/ragflow-deepdoc`)
+- `common/settings.py` を最小スタブに差し替え (`PARALLEL_DEVICES=0`, `DOC_ENGINE_INFINITY=False`)。  
+  完全 RAGFlow が使う `rag.utils.*` / `memory.utils.*` 等への依存を遮断。
+- 独立 venv (`/mnt/data/eval-driven-llm/.venv-deepdoc`, Python 3.12) で現行 eval venv を汚染しない。
+- `PYTHONPATH=/mnt/data/ragflow-deepdoc` で実行。GPU は CPU で動作確認後 Phase 2 で判断。
+
+### 実際に試したこと
+Phase 1 で以下を確認:
+- `t_ocr.py --help`, `t_recognizer.py --help` — 両スクリプト動作  
+- layout 認識 (sample 01: 4p, 03: 24p) — JPG 出力  
+- TSR (sample 01: 4p) — HTML テーブル出力  
+- OCR (sample 01: 4p, 03: 24p) — .txt 出力  
+- CPU 速度: layout ~0.6–1.1s/p、OCR ~3.3–3.9s/p
+
+### 再検討するとき
+- Phase 2 でバッチ処理が必要になり GPU スピードアップを検証するとき。  
+- MinerU / PaddleOCR との横評価 (v2) で別環境が必要になったとき。  
+- DeepDoc の API が breaking change で sparse-checkout が保守困難になったとき。
+
+---
+
+## ADR-0015 — DeepDoc-v1 は単一ツール評価から始める (横評価は v2 スコープ)
+
+**日付**: 2026-06-12  
+**ステータス**: 採用 (Phase 1 完了)
+
+### 背景
+日本語 PDF 解析のベンチマークとして、DeepDoc / MinerU / PaddleOCR などの横評価が考えられる。
+
+### 判断
+v1 では DeepDoc 単独で解析パイプラインを動かして初期品質を把握する。横評価は v2 にスコープを限定する。
+
+### 理由
+
+1. **範囲冻结の原則** (CLAUDE.md): 一つの実験で複数の変数を変えると比較が汚れる。v1 は環境・依存・ベースラインを確立することが目的。
+2. **スタック差異の大きさ**: MinerU は独自 venv + layout モデルのダウンロードが必要; PaddleOCR は CUDA 依存が強い。それぞれ独立したセットアップコストがある。
+3. **先にベースラインを取る**: DeepDoc の出力フォーマット・品質・速度を把握しておかないと、横評価のスコア項目を設計できない。
+4. **コストと判断の順序**: 横評価は v1 のメトリクス設計が確定してから実施する方が、評価観点がブレない。
+
+### 再検討するとき
+v1 Phase 2 で DeepDoc の品質スコアが確定したとき。そこから v2 の比較軸を設計する。
