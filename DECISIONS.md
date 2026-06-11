@@ -559,3 +559,66 @@ by the primary judge (qwen3).
 **Revisit when.** The benchmark is re-run with a third independent judge, or a
 well-studied judge-calibration dataset for Japanese QA becomes available to replace
 the subset agreement approach with a calibrated reliability bound.
+
+---
+
+## ADR-0013 — Benchmark discriminability is a prerequisite for meaningful model selection
+*Status: accepted · 2026-06-11*
+
+**Context.** The v1 model-selection golden set produced 18/20 all-correct items (90%),
+Cohen's κ=1.0 between primary and cross-validation judges, and a hit_rate range of
+only 0.90–1.00 across models. A benchmark in this state cannot distinguish 8B from 31B
+models; any "winner" chosen from such results would be arbitrary.
+
+**The core problem.** When nearly all questions are answered correctly by all models,
+two properties fail simultaneously:
+1. **Selection is uninformative.** A score spread of 0.10 across four models cannot
+   support a deployment decision; the uncertainty in the judge itself (prompt phrasing,
+   temperature, single-run variance) exceeds the measured difference.
+2. **Cross-validation is trivially perfect.** When every answer is correct, any two
+   judges will agree 100% — not because the judges are calibrated, but because there is
+   nothing to disagree about. κ=1.0 in a zero-variance setting is meaningless.
+
+**Why v1 golden set had zero discriminability.** The v1 questions were factual recall
+(絶対零度 = −273.15°C, 富士山 = 3776m, 光速 = 299,792 km/s). All four of these facts
+are saturated in LLM training corpora. Models answer correctly without reading the
+provided context. Context-grounded evaluation that models can bypass via memorisation is
+not evaluation of grounding; it is evaluation of training data coverage.
+
+**Decision.** A golden set must achieve partial discrimination (some models wrong,
+some right) on at least ~40% of items before a selection report can be published.
+All-correct rate ≥ 80% is a redesign signal, not an acceptable result.
+
+**v2 difficulty design (applied principles — not a checklist to follow blindly).**
+
+| Principle | Rationale |
+|---|---|
+| Fictional specs as context | Model cannot answer from training data; must read the context. |
+| Multi-step reasoning chains | Single-step fact retrieval is insufficient; mistakes accumulate. |
+| Completeness via `expected_points` | Partial answers score zero; rewards thoroughness, not breadth. |
+| Dense similar values | Multiple plausible numbers in context; wrong number selection → fail. |
+| Japanese language nuance (keigo, pronouns) | Tests JP-specific capability, not generic QA skill. |
+| Negative/exclusion reasoning | "What is NOT included" requires full context scan, not keyword match. |
+
+**Empirical result after v2 redesign (45 items).**
+
+| Category | v1 (20 items) | v2 (45 items) |
+|---|---|---|
+| All models correct | 90% | 29% |
+| Partial discrimination | 10% | 51% |
+| All models wrong | 0% | 20% |
+| Cohen's κ (cross-val) | 1.0 (trivial) | 0.920 (substantive) |
+| hit_rate spread | 0.10 | 0.22 |
+
+The v1 results are preserved in `results/` and `summary.md`. The correction is visible
+by design — a benchmark correction that is hidden is a benchmark that cannot be trusted.
+
+**What all-models-wrong items indicate.** 20% of v2 items were answered incorrectly by
+all four models. This is expected and acceptable: items that even the strongest model
+fails confirm the golden set is genuinely hard. An ideal discrimination curve has most
+items in the partial zone, with some floor (all-wrong) and some ceiling (all-correct).
+A floor above ~30% signals the golden set is too hard and produces noisy signals.
+
+**Revisit when.** A new golden set is designed for a different task domain, or if the
+all-wrong rate rises above 30% (indicating the floor is too high and scores become
+noise-dominated rather than capability-dominated).
