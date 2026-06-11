@@ -1,8 +1,8 @@
 """
-Model-selection benchmark v1 — on-prem deployment candidates.
+Model-selection benchmark — on-prem deployment candidates.
 
 Two-phase design (required when gen + judge don't fit together in 32 GB VRAM):
-  Phase 1: per-model generation → results/<model>.json  (resumable)
+  Phase 1: per-model generation → <results-dir>/<model>.json  (resumable)
   Phase 2: qwen3:32b judges all results in one pass
   Phase 3: gemma4:31b cross-judges a subset → agreement rate
 
@@ -11,11 +11,11 @@ Dimensions measured:
   - Latency:  tokens/s cold-start vs warm (from Ollama eval_duration)
   - Resource: VRAM peak (nvidia-smi) + model size/quantization (ollama show)
 
-Run:
-  python run_benchmark.py [--phase 1|2|3|all] [--max-queries N]
+Run v1:  python run_benchmark.py [--phase 1|2|3|all] [--max-queries N]
+Run v2:  python run_benchmark.py --golden golden_qa_v2.jsonl --results-dir results_v2 --summary summary_v2.md
 
-Results land in results/ — already-completed models are skipped (resume-safe).
-Summary lands in summary.md.
+Results land in --results-dir — already-completed models are skipped (resume-safe).
+Summary lands in --summary.
 """
 
 from __future__ import annotations
@@ -31,6 +31,7 @@ import urllib.request
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).parent
+# Defaults (v1); overridden by CLI flags for v2
 RESULTS_DIR = SCRIPT_DIR / "results"
 GOLDEN_FILE = SCRIPT_DIR / "golden_qa.jsonl"
 SUMMARY_FILE = SCRIPT_DIR / "summary.md"
@@ -335,6 +336,14 @@ HIT_PROMPT = (
     "質問: {question}\n参照回答: {reference}\n生成回答: {answer}\n\n判定:"
 )
 
+HIT_PROMPT_WITH_POINTS = (
+    "参照回答と採点ポイントを参照し、生成回答がすべての採点ポイントを満たしているか判定してください。"
+    "すべてのポイントを満たしていれば Yes、1つでも欠けていれば No と1語だけで答えてください。\n\n"
+    "質問: {question}\n参照回答: {reference}\n"
+    "採点ポイント（以下をすべて含むこと）: {points}\n"
+    "生成回答: {answer}\n\n判定:"
+)
+
 
 def _llm_generate(model: str, prompt: str, system: str | None = None,
                    max_tokens: int = 32, is_thinking: bool = False) -> str:
@@ -395,13 +404,22 @@ def _judge_item(judge_tag: str, item: dict, is_thinking: bool) -> dict:
         faith = supported / len(claims)
         n_claims = len(claims)
 
-    # Hit rate (reference answer match)
+    # Hit rate — use expected_points prompt if available (v2), else basic match (v1)
+    expected_points = item.get("expected_points")
+    if expected_points:
+        points_str = "、".join(expected_points)
+        hit_prompt = HIT_PROMPT_WITH_POINTS.format(
+            question=item["query"],
+            reference=item["reference_answer"],
+            points=points_str,
+            answer=item["answer"])
+    else:
+        hit_prompt = HIT_PROMPT.format(
+            question=item["query"],
+            reference=item["reference_answer"],
+            answer=item["answer"])
     hit_out = _llm_generate(
-        judge_tag,
-        HIT_PROMPT.format(question=item["query"],
-                           reference=item["reference_answer"],
-                           answer=item["answer"]),
-        system=judge_system,
+        judge_tag, hit_prompt, system=judge_system,
         max_tokens=8, is_thinking=is_thinking)
     hit = hit_out.lower().startswith("yes")
 
@@ -557,9 +575,51 @@ def phase3_cross_validate(args) -> None:
     unload_model(CROSS_JUDGE_MODEL)
 
 
+# ── Discriminability analysis ─────────────────────────────────────────────────
+
+def compute_discriminability(results_dir: Path) -> dict:
+    """Per-question: how many models answered correctly. Returns analysis dict."""
+    judged_files = sorted(results_dir.glob("*_judged.json"))
+    per_q: dict[str, dict] = {}
+    model_labels = []
+    for jf in judged_files:
+        if jf.stem.startswith("cross"):
+            continue
+        doc = json.loads(jf.read_text("utf-8"))
+        label = doc["label"]
+        model_labels.append(label)
+        for a in doc.get("answers", []):
+            qid = a["id"]
+            if qid not in per_q:
+                per_q[qid] = {"query": a["query"], "difficulty": a.get("difficulty", "?"), "hits": {}}
+            per_q[qid]["hits"][label] = a.get("hit_rate", 0.0)
+
+    n_models = len(model_labels)
+    all_correct, all_wrong, partial = [], [], []
+    for qid, data in per_q.items():
+        n_correct = sum(1 for h in data["hits"].values() if h >= 1.0)
+        data["n_correct"] = n_correct
+        if n_correct == n_models:
+            all_correct.append(qid)
+        elif n_correct == 0:
+            all_wrong.append(qid)
+        else:
+            partial.append(qid)
+
+    return {
+        "n_models": n_models,
+        "model_labels": model_labels,
+        "n_questions": len(per_q),
+        "all_correct": all_correct,
+        "all_wrong": all_wrong,
+        "partial": partial,
+        "per_q": per_q,
+    }
+
+
 # ── Summary generation ────────────────────────────────────────────────────────
 
-def generate_summary() -> None:
+def generate_summary(title: str = "v1", golden_file: Path | None = None) -> None:
     judged_files = sorted(RESULTS_DIR.glob("*_judged.json"))
     cross_file = RESULTS_DIR / "cross_validation.json"
 
@@ -596,8 +656,13 @@ def generate_summary() -> None:
         info = json.loads(sf.read_text())
         skipped.append({"label": sf.stem, **info})
 
+    gf = golden_file or GOLDEN_FILE
+    n_golden = sum(1 for _ in gf.open(encoding="utf-8"))
+
+    disc = compute_discriminability(RESULTS_DIR)
+
     lines = [
-        "# Model Selection Benchmark v1 — Summary",
+        f"# Model Selection Benchmark {title} — Summary",
         "",
         "> All numbers from real runs on RTX 5090 32 GB. No placeholders.",
         f"> Judge: **{JUDGE_MODEL}** (not a competitor — see DECISIONS.md ADR for rationale).",
@@ -679,6 +744,36 @@ def generate_summary() -> None:
         "",
     ]
 
+    # Discriminability analysis section
+    disc = compute_discriminability(RESULTS_DIR)
+    n_q = disc["n_questions"]
+    lines += ["## Discriminability Analysis", ""]
+    if n_q == 0:
+        lines += [f"Golden set: **{n_golden} items** (from `{gf.name}`)",
+                  "", "> No judged results yet — run phases 2 and 3 first.", ""]
+    else:
+        n_all_correct = len(disc["all_correct"])
+        n_partial = len(disc["partial"])
+        n_all_wrong = len(disc["all_wrong"])
+        lines += [
+            f"Golden set: **{n_q} items** (from `{gf.name}`)",
+            "",
+            f"| Category | Count | % |",
+            "|---|---|---|",
+            f"| All models correct (zero discrimination) | {n_all_correct} | {n_all_correct/n_q*100:.0f}% |",
+            f"| Partial discrimination (some models wrong) | {n_partial} | {n_partial/n_q*100:.0f}% |",
+            f"| All models wrong | {n_all_wrong} | {n_all_wrong/n_q*100:.0f}% |",
+            "",
+        ]
+        if disc["partial"]:
+            lines += ["### Discriminating questions (partial correct)", "",
+                      f"| ID | Difficulty | #Correct/{disc['n_models']} | Query (preview) |",
+                      "|---|---|---|---|"]
+            for qid in sorted(disc["partial"]):
+                d = disc["per_q"][qid]
+                lines.append(f"| {qid} | {d['difficulty']} | {d['n_correct']}/{disc['n_models']} | {d['query'][:55]} |")
+            lines.append("")
+
     if skipped:
         lines += ["## Excluded models", ""]
         for s in skipped:
@@ -692,13 +787,35 @@ def generate_summary() -> None:
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
+    global RESULTS_DIR, GOLDEN_FILE, SUMMARY_FILE
+
     ap = argparse.ArgumentParser()
     ap.add_argument("--phase", default="all",
                     choices=["1", "2", "3", "all"],
                     help="which phase(s) to run")
     ap.add_argument("--max-queries", type=int, default=None,
                     help="limit to first N golden items (for quick smoke-tests)")
+    ap.add_argument("--golden", default=None,
+                    help="path to golden QA jsonl (default: golden_qa.jsonl)")
+    ap.add_argument("--results-dir", default=None,
+                    help="output directory for per-model JSONs (default: results/)")
+    ap.add_argument("--summary", default=None,
+                    help="path to write summary markdown (default: summary.md)")
+    ap.add_argument("--title", default=None,
+                    help="benchmark title label (e.g. 'v2') for summary heading")
     args = ap.parse_args()
+
+    # Override module-level paths from CLI
+    if args.golden:
+        GOLDEN_FILE = SCRIPT_DIR / args.golden
+    if args.results_dir:
+        RESULTS_DIR = SCRIPT_DIR / args.results_dir
+    if args.summary:
+        SUMMARY_FILE = SCRIPT_DIR / args.summary
+
+    title = args.title or GOLDEN_FILE.stem.replace("golden_qa", "").strip("_-") or "v1"
+    if not title:
+        title = "v1"
 
     golden = load_golden()
     print(f"golden set: {len(golden)} items ({GOLDEN_FILE})", flush=True)
@@ -712,7 +829,7 @@ def main():
     if args.phase in ("3", "all"):
         phase3_cross_validate(args)
 
-    generate_summary()
+    generate_summary(title=title, golden_file=GOLDEN_FILE)
     print("done.", flush=True)
 
 

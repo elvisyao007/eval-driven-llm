@@ -45,3 +45,20 @@
 - Golden set: 20 context-grounded QA items, neutral tech/Japanese knowledge, no customer data.
 - Golden set source: golden_qa.jsonl (committed to repo).
 
+## Discriminability Analysis
+
+Golden set: **20 items** (from `golden_qa.jsonl`)
+
+| Category | Count | % |
+|---|---|---|
+| All models correct (zero discrimination) | 18 | 90% |
+| Partial discrimination (some models wrong) | 2 | 10% |
+| All models wrong | 0 | 0% |
+
+### Discriminating questions (partial correct)
+
+| ID | Difficulty | #Correct/4 | Query (preview) |
+|---|---|---|---|
+| msv1-011 | ? | 2/4 | 光合成において、植物は何を吸収して何を放出しますか? |
+| msv1-015 | ? | 3/4 | 温室効果ガスの代表的なものとして二酸化炭素の他に何がありますか? |
+
