@@ -11,6 +11,8 @@ data/**/*.bin
 data/corpus/jqara/
 reports/*/  # run outputs; commit curated reports deliberately, not all
 !reports/.gitkeep
+# curated reports: explicitly opt-in
+!reports/model-selection-v1/
 
 # generated ingestion fixtures + outputs (rebuild via scripts/ + make)
 data/corpus/_dirty/

@@ -427,3 +427,135 @@ QA benchmark. The threshold is a hyperparameter in `grounded_but_wrong_flag`
 
 **Revisit when.** A future dataset with low n_rel per query (≤ 3) would make
 proportion recall and hit@k converge, restoring the original interpretation.
+
+---
+
+## ADR-0010 — Model selection benchmark v1: qwen3 as judge, not competitor
+*Status: accepted · 2026-06-11*
+
+**Context.** The model-selection benchmark (`reports/model-selection-v1/`) evaluates
+four deployment candidates: gemma4:31b, ELYZA-JP-8B, Swallow-8B-Instruct, and
+Nemotron-Nano-9B-JP. A judge model is needed to score faithfulness and answer
+accuracy. qwen3:32b is available on this machine and is the most capable local model.
+
+**Options.**
+- A. Use qwen3:32b as both a competitor and the primary judge.
+- B. Exclude qwen3 from the competitor list and use it only as judge.
+- C. Use gemma4:31b as judge (it is already a competitor).
+
+**Decision: B.** qwen3:32b judges, does not compete.
+
+**Why.**
+1. **Deployment/content layer separation (standing project rule — see ADR-0003).**
+   Chinese frontier models are excluded from the deployment layer on data-sovereignty
+   and compliance grounds for Japanese on-prem customers. qwen3 therefore belongs to
+   the *content/research layer* (radar, evaluation tooling) rather than the
+   *deployment payload layer*. It is architecturally ineligible as a deployment
+   candidate, so adding it to the competitor list would blur a meaningful boundary.
+
+2. **Self-preference / self-grading bias.** LLM judges are known to favour outputs
+   stylistically similar to their own training distribution. A judge scoring its own
+   outputs (or outputs of closely related models) inflates scores in a way that is
+   hard to detect and harder to defend to a customer. The established mitigation is to
+   ensure judge ≠ any competitor — which B achieves and A violates.
+
+3. **Judge capability.** qwen3:32b is the strongest available local model and therefore
+   the best judge for quality signals. Demoting it to a competitor to make the lineup
+   "fair" would make the judge weaker for no benefit.
+
+**Rejected.**
+- A — mixes judge and competitor roles; creates self-grading risk for a model that is
+  also architecturally excluded from the deployment layer.
+- C — gemma4 IS a competitor; a competitor judging itself or the field is the exact
+  self-grading problem this rule is designed to prevent.
+
+**Isolation guarantee.** gemma4:31b is used as a *cross-validation judge* on a 25-item
+subset **solely to verify that qwen3's judgments are reliable** — it is not used to
+compute gemma4's own main scores. gemma4's main scores are computed by qwen3. This
+isolation is enforced in `run_benchmark.py` (phase2 uses qwen3 for all models;
+phase3 cross-validates on a subset using gemma4 but writes a separate
+`cross_validation.json`, not back into gemma4's judged results).
+
+**Revisit when.** A local model from a compliance-clear vendor (Apache 2.0 or MIT,
+non-Chinese origin) matches qwen3:32b judgment quality — then that model can serve as
+primary judge without the deployment-layer conflict.
+
+---
+
+## ADR-0011 — Why 8B and 31B models are compared on the same table
+*Status: accepted · 2026-06-11*
+
+**Context.** The model-selection benchmark puts ELYZA-JP-8B and Swallow-8B-Instruct
+(8B) alongside gemma4:31b (31B) in the same results table. A common objection is
+that this is an unfair apples-to-oranges comparison that a 31B model will trivially
+win.
+
+**Decision.** Compare them on the same table, clearly labelled.
+
+**Why.**
+The benchmark answers a **constraint-under-deployment** question, not an
+**absolute quality ranking**. The right frame is: *given a VRAM budget, a latency
+target, and a Japanese quality threshold, which model do I deploy?* Under that frame:
+- A customer with a single 10 GB GPU **cannot deploy** gemma4:31b regardless of its
+  quality advantage; the relevant question for them is which 8B model wins.
+- A customer with 20 GB and no latency constraint should probably deploy gemma4:31b
+  if the quality gap justifies the extra VRAM.
+- The quality gap itself must be *measured* — it is not given. An 8B Japanese
+  specialist might narrow the gap enough that the VRAM savings outweigh it.
+
+The decision table in `summary.md` makes the constraint mapping explicit:
+"VRAM ≤ 10 GB → 8B family; VRAM ≤ 20 GB → gemma4:31b if quality gap > threshold."
+This is more useful than a one-winner ranking.
+
+**What the table does NOT claim.** It does not claim the comparison is architecturally
+symmetric. Parameter count, quantization, and training distribution are all different.
+The table explicitly lists parameters and quantization so readers can calibrate.
+
+**Revisit when.** A new 8B model with comparable quality to 31B emerges (then the
+VRAM constraint no longer distinguishes them meaningfully and the decision table
+collapses to one recommendation).
+
+---
+
+## ADR-0012 — Cross-validation protocol: primary judge scores + subset agreement check
+*Status: accepted · 2026-06-11*
+
+**Context.** Any single-judge eval carries judge reliability risk: the judge may be
+systematically biased, misconfigured, or simply wrong on a class of inputs. The
+benchmark uses a single primary judge (qwen3:32b) for all models, which gives
+consistent, comparable scores but provides no self-check on that judge's reliability.
+
+**Options.**
+- A. Run all models through two independent judges and average scores.
+- B. Run primary judge for all, then run a second judge on a held-out subset; report
+  agreement between the two judges as a reliability signal rather than blending scores.
+- C. Rely on the primary judge alone.
+
+**Decision: B.**
+
+**Why.**
+- A blends scores (A) would require two judge passes over all items, roughly doubling
+  VRAM switching cost and total run time. It also raises the question of how to
+  combine conflicting judgments; averaged scores obscure real disagreements.
+- B keeps main scores clean and comparable (primary judge only), while exposing
+  judge reliability explicitly as an observable. If primary and cross judge agree
+  ≥ 80%, the primary judge's scores can be trusted. If they disagree substantially,
+  that signals an unreliable evaluation and warrants investigation before publishing.
+- C provides no signal on judge quality, making the scores undefendable if challenged.
+
+**Protocol details (immutable for this benchmark run).**
+- Primary judge: qwen3:32b — scores all items for all competitors.
+- Cross judge: gemma4:31b — scores a 25-item random subset (seed 42) drawn from one
+  competitor's judged results (excluding gemma4's own results to avoid self-grading).
+- Agreement metrics reported: hit agreement rate (binary match), Cohen's κ (hit),
+  faithfulness agreement rate (|Δ| < 0.2).
+- Disagreements listed individually in `cross_validation.json` for manual inspection.
+
+**Isolation invariant.** gemma4's cross-judge pass **must not feed back into any
+competitor's main scores**, including its own. Cross-validation output lives only in
+`results/cross_validation.json`; `results/*_judged.json` files are written exclusively
+by the primary judge (qwen3).
+
+**Revisit when.** The benchmark is re-run with a third independent judge, or a
+well-studied judge-calibration dataset for Japanese QA becomes available to replace
+the subset agreement approach with a calibrated reliability bound.
