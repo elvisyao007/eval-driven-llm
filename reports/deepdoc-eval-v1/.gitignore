@@ -1,0 +1,3 @@
+# Exclude raw PDF samples and large output images — tracked in SOURCES.md
+samples/*.pdf
+raw_output/
