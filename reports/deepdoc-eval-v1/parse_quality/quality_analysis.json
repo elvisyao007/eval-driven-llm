@@ -1,0 +1,347 @@
+{
+  "ocr": [
+    {
+      "file": "01_nta_kakutei_r06",
+      "total_chunks": 1,
+      "total_chars": 21,
+      "reiwa_correct": 0,
+      "reiwa_wrong": 0,
+      "reiwa_total": 0,
+      "reiwa_error_rate": null,
+      "pages_with_year_refs": [],
+      "known_errors": {}
+    },
+    {
+      "file": "02_mof_budget_fy2025",
+      "total_chunks": 63,
+      "total_chars": 7380,
+      "reiwa_correct": 10,
+      "reiwa_wrong": 0,
+      "reiwa_total": 10,
+      "reiwa_error_rate": 0.0,
+      "pages_with_year_refs": [
+        {
+          "page": 1,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 3,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 7,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 9,
+          "correct": 5,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 11,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        }
+      ],
+      "known_errors": {}
+    },
+    {
+      "file": "03_stat_kakei_2023",
+      "total_chunks": 66,
+      "total_chars": 9298,
+      "reiwa_correct": 2,
+      "reiwa_wrong": 0,
+      "reiwa_total": 2,
+      "reiwa_error_rate": 0.0,
+      "pages_with_year_refs": [
+        {
+          "page": 1,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 6,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        }
+      ],
+      "known_errors": {}
+    },
+    {
+      "file": "04_mof_fiscal_202510",
+      "total_chunks": 208,
+      "total_chars": 26952,
+      "reiwa_correct": 62,
+      "reiwa_wrong": 0,
+      "reiwa_total": 62,
+      "reiwa_error_rate": 0.0,
+      "pages_with_year_refs": [
+        {
+          "page": 1,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 4,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 5,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 9,
+          "correct": 15,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 10,
+          "correct": 6,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 11,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 27,
+          "correct": 5,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 28,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 34,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 37,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 38,
+          "correct": 3,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 43,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 44,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 46,
+          "correct": 4,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 47,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 49,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 53,
+          "correct": 3,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 55,
+          "correct": 3,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 56,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 57,
+          "correct": 2,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 58,
+          "correct": 1,
+          "wrong": 0,
+          "error_rate": 0.0
+        },
+        {
+          "page": 60,
+          "correct": 4,
+          "wrong": 0,
+          "error_rate": 0.0
+        }
+      ],
+      "known_errors": {}
+    },
+    {
+      "file": "05_archives_scan",
+      "total_chunks": 33,
+      "total_chars": 5999,
+      "reiwa_correct": 0,
+      "reiwa_wrong": 0,
+      "reiwa_total": 0,
+      "reiwa_error_rate": null,
+      "pages_with_year_refs": [],
+      "known_errors": {}
+    }
+  ],
+  "tsr": {
+    "file": "01_nta_kakutei_r06",
+    "gt_cells": 20,
+    "exact_match": 6,
+    "fuzzy_match": 1,
+    "miss": 13,
+    "exact_rate": 0.3,
+    "exact_or_fuzzy_rate": 0.35,
+    "details": [
+      {
+        "page": 0,
+        "expected": "令和",
+        "status": "fuzzy"
+      },
+      {
+        "page": 0,
+        "expected": "税務署長",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "納税地",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "個人番号",
+        "status": "exact"
+      },
+      {
+        "page": 0,
+        "expected": "生年月日",
+        "status": "exact"
+      },
+      {
+        "page": 0,
+        "expected": "氏名",
+        "status": "exact"
+      },
+      {
+        "page": 0,
+        "expected": "職業",
+        "status": "exact"
+      },
+      {
+        "page": 0,
+        "expected": "世帯主の氏名",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "振替納税希望",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "事業所得",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "配当所得",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "不動産所得",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "給与所得",
+        "status": "miss"
+      },
+      {
+        "page": 0,
+        "expected": "公的年金等",
+        "status": "exact"
+      },
+      {
+        "page": 0,
+        "expected": "申告納税額",
+        "status": "miss"
+      },
+      {
+        "page": 1,
+        "expected": "社会保険料控除",
+        "status": "miss"
+      },
+      {
+        "page": 1,
+        "expected": "生命保険料控除",
+        "status": "miss"
+      },
+      {
+        "page": 1,
+        "expected": "地震保険料控除",
+        "status": "miss"
+      },
+      {
+        "page": 1,
+        "expected": "寡婦、寡夫控除",
+        "status": "miss"
+      },
+      {
+        "page": 1,
+        "expected": "扶養控除",
+        "status": "exact"
+      }
+    ]
+  }
+}

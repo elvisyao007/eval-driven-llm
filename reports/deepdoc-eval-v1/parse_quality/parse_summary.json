@@ -1,0 +1,42 @@
+[
+  {
+    "file": "01_nta_kakutei_r06.pdf",
+    "deepdoc_chunks": 1,
+    "deepdoc_tables": 9,
+    "deepdoc_elapsed_s": 138.41,
+    "plain_chunks": 1093,
+    "plain_elapsed_s": 0.19
+  },
+  {
+    "file": "02_mof_budget_fy2025.pdf",
+    "deepdoc_chunks": 63,
+    "deepdoc_tables": 2,
+    "deepdoc_elapsed_s": 25.16,
+    "plain_chunks": 639,
+    "plain_elapsed_s": 0.16
+  },
+  {
+    "file": "03_stat_kakei_2023.pdf",
+    "deepdoc_chunks": 66,
+    "deepdoc_tables": 13,
+    "deepdoc_elapsed_s": 220.52,
+    "plain_chunks": 1363,
+    "plain_elapsed_s": 0.58
+  },
+  {
+    "file": "04_mof_fiscal_202510.pdf",
+    "deepdoc_chunks": 208,
+    "deepdoc_tables": 38,
+    "deepdoc_elapsed_s": 474.38,
+    "plain_chunks": 5057,
+    "plain_elapsed_s": 2.6
+  },
+  {
+    "file": "05_archives_scan.pdf",
+    "deepdoc_chunks": 33,
+    "deepdoc_tables": 2,
+    "deepdoc_elapsed_s": 37.23,
+    "plain_chunks": 372,
+    "plain_elapsed_s": 0.07
+  }
+]

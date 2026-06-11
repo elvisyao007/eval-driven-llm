@@ -1,0 +1,3 @@
+# Exclude large parsed JSON files (reproducible from PDFs + scripts)
+*_deepdoc.json
+*_plain.json
