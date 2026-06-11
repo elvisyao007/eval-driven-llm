@@ -1,0 +1,300 @@
+{
+  "source_model_file": "elyza-jp-8b_judged",
+  "primary_judge": "qwen3:32b",
+  "cross_judge": "gemma4:31b",
+  "n_items": 25,
+  "faithfulness_agreement_rate": 0.68,
+  "hit_agreement_rate": 0.96,
+  "cohen_kappa_hit": 0.9196,
+  "n_disagreements": 1,
+  "disagreements": [
+    {
+      "id": "msv2-008",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 0.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": false
+    }
+  ],
+  "items": [
+    {
+      "id": "msv2-041",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-008",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 0.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": false
+    },
+    {
+      "id": "msv2-002",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-018",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.8889,
+      "cross_faithfulness": 0.8889,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-016",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.5556,
+      "cross_faithfulness": 0.2222,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-015",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.6,
+      "cross_faithfulness": 0.2,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-009",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-007",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-035",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.6,
+      "cross_faithfulness": 0.4167,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-006",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-028",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.5,
+      "cross_faithfulness": 0.0,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-003",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-043",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.7143,
+      "cross_faithfulness": 0.1429,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-036",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.6667,
+      "cross_faithfulness": 0.0,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-038",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.6,
+      "cross_faithfulness": 0.6,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-044",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 0.625,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-017",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-020",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.6667,
+      "cross_faithfulness": 0.75,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-001",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-042",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.75,
+      "cross_faithfulness": 0.5556,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-031",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.8333,
+      "cross_faithfulness": 0.875,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-023",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 0.6667,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": false,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-021",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.3333,
+      "cross_faithfulness": 0.2667,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-026",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 0.7143,
+      "cross_faithfulness": 0.8571,
+      "primary_hit": 0.0,
+      "cross_hit": 0.0,
+      "faith_agree": true,
+      "hit_agree": true
+    },
+    {
+      "id": "msv2-014",
+      "primary_judge": "qwen3:32b",
+      "cross_judge": "gemma4:31b",
+      "primary_faithfulness": 1.0,
+      "cross_faithfulness": 1.0,
+      "primary_hit": 1.0,
+      "cross_hit": 1.0,
+      "faith_agree": true,
+      "hit_agree": true
+    }
+  ]
+}
