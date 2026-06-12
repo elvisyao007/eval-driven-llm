@@ -17,3 +17,7 @@ reports/*/  # run outputs; commit curated reports deliberately, not all
 # generated ingestion fixtures + outputs (rebuild via scripts/ + make)
 data/corpus/_dirty/
 data/corpus/_ingested/
+
+# IDE + local venvs
+.idea/
+.venv-deepdoc/

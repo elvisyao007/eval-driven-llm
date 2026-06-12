@@ -1,0 +1,53 @@
+<svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>DeepDoc on Japanese documents: behavior by document type</title>
+<desc>Matrix showing DeepDoc parser behavior across four Japanese document types. Embedded-font PDFs: 0% OCR error, +15% hit@5. Form/scanned PDFs: ~100% era-name corruption. Table-heavy docs: 30% TSR exact match. Form documents: near-total failure.</desc>
+
+<rect width="680" height="360" fill="white"/>
+
+<!-- title -->
+<text x="24" y="32" font-family="system-ui,sans-serif" font-size="15" font-weight="500" fill="#2C2C2A">DeepDoc on Japanese documents — behavior splits by document type</text>
+<text x="24" y="50" font-family="system-ui,sans-serif" font-size="12" fill="#888780">not "good" or "bad" — good here, broken there, and here's the line</text>
+
+<!-- header -->
+<rect x="24" y="64" width="632" height="32" rx="6" fill="#F1EFE8"/>
+<text x="40" y="85" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A">document type</text>
+<text x="330" y="85" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A">DeepDoc behavior</text>
+<text x="560" y="85" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#5F5E5A">verdict</text>
+
+<!-- row 1: embedded font — GOOD (green) -->
+<rect x="24" y="100" width="632" height="56" rx="6" fill="#EAF3DE"/>
+<rect x="24" y="100" width="4" height="56" rx="2" fill="#1D9E75"/>
+<text x="40" y="124" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">Embedded-font PDF</text>
+<text x="40" y="142" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A">gov reports, Word/LaTeX exports</text>
+<text x="330" y="124" font-family="system-ui,sans-serif" font-size="12" fill="#3B6D11">OCR error 0% · native-text path</text>
+<text x="330" y="142" font-family="system-ui,sans-serif" font-size="12" fill="#3B6D11" font-weight="500">+15% hit@5 from layout</text>
+<text x="560" y="133" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#1D9E75">use it</text>
+
+<!-- row 2: form/scanned — BROKEN (red) -->
+<rect x="24" y="160" width="632" height="48" rx="6" fill="#FAE9E2"/>
+<rect x="24" y="160" width="4" height="48" rx="2" fill="#D85A30"/>
+<text x="40" y="182" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">Form-font / scanned PDF</text>
+<text x="40" y="198" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A">no text layer → OCR fallback</text>
+<text x="330" y="188" font-family="system-ui,sans-serif" font-size="12" fill="#A8401E">令→今 era-name corruption ~100%</text>
+<text x="560" y="188" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#D85A30">risky</text>
+
+<!-- row 3: table-heavy — WEAK (amber) -->
+<rect x="24" y="212" width="632" height="48" rx="6" fill="#FBF0DC"/>
+<rect x="24" y="212" width="4" height="48" rx="2" fill="#EF9F27"/>
+<text x="40" y="234" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">Table-heavy documents</text>
+<text x="40" y="250" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A">TSR is a headline feature</text>
+<text x="330" y="240" font-family="system-ui,sans-serif" font-size="12" fill="#9A6206">exact-match cell accuracy ~30%</text>
+<text x="560" y="240" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#C8881B">weak</text>
+
+<!-- row 4: form docs — FAIL (red) -->
+<rect x="24" y="264" width="632" height="48" rx="6" fill="#FAE9E2"/>
+<rect x="24" y="264" width="4" height="48" rx="2" fill="#D85A30"/>
+<text x="40" y="286" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#2C2C2A">Form documents (e-Tax style)</text>
+<text x="40" y="302" font-family="system-ui,sans-serif" font-size="11" fill="#5F5E5A">請求書, tax filings — bulk of JP back-office</text>
+<text x="330" y="292" font-family="system-ui,sans-serif" font-size="12" fill="#A8401E">near-total failure · ~1 chunk extracted</text>
+<text x="560" y="292" font-family="system-ui,sans-serif" font-size="12" font-weight="500" fill="#D85A30">avoid</text>
+
+<!-- footnote -->
+<text x="24" y="336" font-family="system-ui,sans-serif" font-size="11" fill="#888780">5 documents · 20-question golden set · BM25 retrieval · oracle ceiling 100% · initial signal, not a verdict — dense + harder set in Phase 3</text>
+<text x="24" y="352" font-family="system-ui,sans-serif" font-size="11" fill="#888780">RTX-class workstation · DeepDoc PdfParser API (standalone, no full RAGFlow stack) · sanity gate PASS</text>
+</svg>
