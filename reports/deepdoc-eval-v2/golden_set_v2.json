@@ -1,0 +1,310 @@
+{
+  "metadata": {
+    "version": "2.0",
+    "created": "2026-06-13",
+    "n_questions": 32,
+    "sources": [
+      "02_mof_budget_fy2025.pdf",
+      "03_stat_kakei_2023.pdf",
+      "04_mof_fiscal_202510.pdf"
+    ],
+    "difficulty_design": "v2 hardening over v1: (1) table-cell extraction requiring specific row/column read, (2) cross-page lookup from deep sections, (3) 4 oracle-failing arithmetic questions whose calculated answer does NOT appear anywhere in either corpus — these drive oracle ceiling to 28/32=87.5%.",
+    "oracle_failing_ids": ["Q07", "Q08", "Q18", "Q26"],
+    "oracle_ceiling_expected": "28/32 = 87.5%",
+    "note": "All answers verified against the original parse outputs. No customer data. 4 oracle-failing questions test retrieval of source chunks even though the final arithmetic result is absent from corpus."
+  },
+  "questions": [
+    {
+      "id": "Q01",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "medium",
+      "question": "令和7年度予算における社会保障関係費以外の一般歳出は何億円か？",
+      "answer": "299,674億円",
+      "answer_keywords": ["299,674", "社会保障関係費以外"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q02",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "medium",
+      "question": "令和6年度当初予算から令和7年度予算にかけての一般歳出の増加額は何億円か？",
+      "answer": "+4,689億円",
+      "answer_keywords": ["4,689", "一般歳出"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q03",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "medium",
+      "question": "令和7年度予算の一般予備費はいくらか（億円）？",
+      "answer": "10,000億円",
+      "answer_keywords": ["10,000", "一般予備費"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q04",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度予算においてその他収入の内数として計上されている防衛力強化分はいくらか（億円）？",
+      "answer": "26,659億円",
+      "answer_keywords": ["26,659", "防衛力強化"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q05",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "medium",
+      "question": "令和7年度予算における建設公債（4条公債）の発行額は何億円か？",
+      "answer": "67,910億円",
+      "answer_keywords": ["67,910", "建設公債"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q06",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "hard",
+      "question": "令和6年度当初予算に計上されていた物価・賃上げ促進予備費の令和7年度における増減額は何億円か？",
+      "answer": "▲10,000億円（令和7年度は計上なし）",
+      "answer_keywords": ["▲10,000", "物価・賃上げ促進予備費"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q07",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "oracle_fail",
+      "question": "令和7年度予算における社会保障関係費（382,778億円）と国債費（282,179億円）を合計すると何億円か？",
+      "answer": "664,957億円（計算値：382,778＋282,179）",
+      "answer_keywords": ["664,957"],
+      "answer_page_hint": 1,
+      "note": "oracle-failing: 664,957 does not appear in either corpus. Requires arithmetic from two table cells on the same page."
+    },
+    {
+      "id": "Q08",
+      "source": "02_mof_budget_fy2025.pdf",
+      "difficulty": "oracle_fail",
+      "question": "令和7年度予算において公債金を除いた歳入（税収＋その他収入）の合計は何億円か？",
+      "answer": "868,925億円（計算値：784,400＋84,525）",
+      "answer_keywords": ["868,925"],
+      "answer_page_hint": 1,
+      "note": "oracle-failing: 868,925 does not appear in either corpus. Requires arithmetic from two table cells."
+    },
+    {
+      "id": "Q09",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査（二人以上の世帯）における2月の消費支出月額は何円か？",
+      "answer": "272,214円",
+      "answer_keywords": ["272,214"],
+      "answer_page_hint": 2
+    },
+    {
+      "id": "Q10",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査（二人以上の世帯）における12月の消費支出月額は何円か？",
+      "answer": "329,518円",
+      "answer_keywords": ["329,518"],
+      "answer_page_hint": 2
+    },
+    {
+      "id": "Q11",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "medium",
+      "question": "2023年（令和5年）の二人以上の世帯における月平均消費支出額は何円か？",
+      "answer": "293,997円",
+      "answer_keywords": ["293,997"],
+      "answer_page_hint": 2
+    },
+    {
+      "id": "Q12",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査において70歳以上の世帯主を持つ二人以上世帯の月平均消費支出は何円か？",
+      "answer": "249,177円",
+      "answer_keywords": ["249,177"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q13",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年の二人以上の世帯における消費支出の費目別内訳で、食料の月平均額は何円か？",
+      "answer": "86,554円",
+      "answer_keywords": ["86,554", "食料"],
+      "answer_page_hint": 2
+    },
+    {
+      "id": "Q14",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "medium",
+      "question": "2023年家計調査における二人以上の世帯の平均世帯人員は何人か？",
+      "answer": "2.90人",
+      "answer_keywords": ["2.90", "世帯人員"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q15",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査で40歳以上49歳以下の世帯主を持つ二人以上世帯の月平均消費支出は何円か？",
+      "answer": "323,660円",
+      "answer_keywords": ["323,660"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q16",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査で50歳以上59歳以下の世帯主を持つ二人以上世帯の月平均消費支出は何円か？",
+      "answer": "348,025円",
+      "answer_keywords": ["348,025"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q17",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査で60歳以上69歳以下の世帯主を持つ二人以上世帯の月平均消費支出は何円か？",
+      "answer": "306,476円",
+      "answer_keywords": ["306,476"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q18",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "oracle_fail",
+      "question": "2023年家計調査で二人以上の世帯のうち40～49歳の世帯主と40歳未満の世帯主の消費支出の差は何円か（40代の方が何円多いか）？",
+      "answer": "51,192円（計算値：323,660－272,468）",
+      "answer_keywords": ["51,192"],
+      "answer_page_hint": 3,
+      "note": "oracle-failing: 51,192 does not appear in either corpus. Requires arithmetic from two rows of the age-group table."
+    },
+    {
+      "id": "Q19",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "medium",
+      "question": "2023年の二人以上世帯の消費支出の実質増減率（対前年）は何%か？",
+      "answer": "-2.6%",
+      "answer_keywords": ["-2.6", "実質増減率"],
+      "answer_page_hint": 2
+    },
+    {
+      "id": "Q20",
+      "source": "03_stat_kakei_2023.pdf",
+      "difficulty": "hard",
+      "question": "2023年家計調査で65歳以上（再掲）の世帯主を持つ二人以上世帯の月平均消費支出は何円か？",
+      "answer": "261,235円",
+      "answer_keywords": ["261,235"],
+      "answer_page_hint": 3
+    },
+    {
+      "id": "Q21",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "medium",
+      "question": "令和7年度末の普通国債残高はいくらと見込まれているか（兆円）？",
+      "answer": "1,129兆円",
+      "answer_keywords": ["1,129", "普通国債残高"],
+      "answer_page_hint": 5
+    },
+    {
+      "id": "Q22",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "medium",
+      "question": "令和7年度の一般会計歳出総額は何兆円か（財政関係資料より）？",
+      "answer": "115.2兆円",
+      "answer_keywords": ["115.2", "一般会計歳出"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q23",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度末の国及び地方の長期債務残高はいくらか（兆円）？",
+      "answer": "1,330兆円（対GDP比209%）",
+      "answer_keywords": ["1,330", "長期債務残高"],
+      "answer_page_hint": 6
+    },
+    {
+      "id": "Q24",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度の一般会計における公債依存度（公債発行額÷一般会計歳出）は何%か？",
+      "answer": "24.9%",
+      "answer_keywords": ["24.9", "公債依存度"],
+      "answer_page_hint": 4
+    },
+    {
+      "id": "Q25",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度の一般会計歳出における社会保障関係費の割合は何%か（財政関係資料の注記による）？",
+      "answer": "56.2%",
+      "answer_keywords": ["56.2", "社会保障関係費"],
+      "answer_page_hint": 1
+    },
+    {
+      "id": "Q26",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "oracle_fail",
+      "question": "令和7年度の特別会計歳出総額（429.5兆円）から一般会計歳出総額（115.2兆円）を差し引いた差は何兆円か？",
+      "answer": "314.3兆円（計算値：429.5－115.2）",
+      "answer_keywords": ["314.3"],
+      "answer_page_hint": 50,
+      "note": "oracle-failing: 314.3 does not appear in either corpus. Requires arithmetic from two table cells in the general/special account comparison table."
+    },
+    {
+      "id": "Q27",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和5年度末における国の資産合計はいくらか（兆円）？",
+      "answer": "778.1兆円",
+      "answer_keywords": ["778.1", "資産合計"],
+      "answer_page_hint": 53
+    },
+    {
+      "id": "Q28",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和5年度末における国の負債合計はいくらか（兆円）？",
+      "answer": "1,473.8兆円",
+      "answer_keywords": ["1,473.8", "負債合計"],
+      "answer_page_hint": 53
+    },
+    {
+      "id": "Q29",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度の特別会計歳出総額は何兆円か？",
+      "answer": "429.5兆円",
+      "answer_keywords": ["429.5", "特別会計歳出"],
+      "answer_page_hint": 50
+    },
+    {
+      "id": "Q30",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "平成2年度末から令和7年度末にかけての普通国債残高の増加額は約何兆円か？",
+      "answer": "約958兆円",
+      "answer_keywords": ["958", "普通国債残高"],
+      "answer_page_hint": 7
+    },
+    {
+      "id": "Q31",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和5年度末の国の資産・負債差額はいくらか（符号含む、兆円）？",
+      "answer": "▲695.7兆円",
+      "answer_keywords": ["695.7", "資産・負債差額"],
+      "answer_page_hint": 53
+    },
+    {
+      "id": "Q32",
+      "source": "04_mof_fiscal_202510.pdf",
+      "difficulty": "hard",
+      "question": "令和7年度の一般会計と特別会計を合わせた歳出合計（重複控除前、Ａ＋Ｂ）は何兆円か？",
+      "answer": "544.7兆円",
+      "answer_keywords": ["544.7"],
+      "answer_page_hint": 50
+    }
+  ]
+}
