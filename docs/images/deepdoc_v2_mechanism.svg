@@ -1,0 +1,32 @@
+<svg viewBox="0 0 680 360" xmlns="http://www.w3.org/2000/svg" role="img">
+<title>Why fragmentation hurts dense retrieval more than BM25</title>
+<desc>Mechanism diagram. Plain text extraction yields 2934 fragmented chunks; DeepDoc yields 630 coherent chunks. BM25 matches keywords so fragments mostly survive. Dense embeds meaning so context-stripped fragments produce poor vectors. DeepDoc's coherent chunks benefit dense retrieval more.</desc>
+
+<rect width="680" height="360" fill="white"/>
+
+<text x="24" y="32" font-family="system-ui,sans-serif" font-size="15" font-weight="500" fill="#2C2C2A">Why structured parsing helps dense more: chunk coherence</text>
+
+<!-- chunk count comparison -->
+<rect x="24" y="52" width="300" height="56" rx="8" fill="#EDEBFB" stroke="#AFA9EC" stroke-width="0.5"/>
+<text x="174" y="76" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#3C3489" text-anchor="middle">Plain text → 2,934 chunks</text>
+<text x="174" y="96" font-family="system-ui,sans-serif" font-size="11" fill="#534AB7" text-anchor="middle">sliding window · fragmented · context-stripped</text>
+
+<rect x="356" y="52" width="300" height="56" rx="8" fill="#EAF3DE" stroke="#5DCAA5" stroke-width="0.5"/>
+<text x="506" y="76" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#085041" text-anchor="middle">DeepDoc → 630 chunks</text>
+<text x="506" y="96" font-family="system-ui,sans-serif" font-size="11" fill="#0F6E56" text-anchor="middle">layout-separated · coherent · 4.6× fewer</text>
+
+<!-- BM25 row -->
+<rect x="24" y="132" width="632" height="86" rx="8" fill="#FBF8F0" stroke="#E8C570" stroke-width="0.5"/>
+<text x="44" y="156" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#7A4E08">BM25 matches keywords</text>
+<text x="44" y="178" font-family="system-ui,sans-serif" font-size="12" fill="#9A6206">a fragmented chunk still contains its keywords → lexical matching mostly survives fragmentation</text>
+<text x="44" y="200" font-family="system-ui,sans-serif" font-size="12" fill="#9A6206">plain text holds up okay: <tspan font-weight="500">56.2%</tspan>  ·  DeepDoc edge: <tspan font-weight="500" fill="#157355">+12.5%</tspan></text>
+
+<!-- Dense row -->
+<rect x="24" y="230" width="632" height="86" rx="8" fill="#F4F1FB" stroke="#AFA9EC" stroke-width="0.5"/>
+<text x="44" y="254" font-family="system-ui,sans-serif" font-size="13" font-weight="500" fill="#3C3489">Dense embeds meaning</text>
+<text x="44" y="276" font-family="system-ui,sans-serif" font-size="12" fill="#534AB7">a context-stripped fragment produces a low-quality vector → fragmentation hurts dense badly</text>
+<text x="44" y="298" font-family="system-ui,sans-serif" font-size="12" fill="#534AB7">plain text collapses: <tspan font-weight="500" fill="#A8401E">40.6%</tspan>  ·  DeepDoc edge: <tspan font-weight="500" fill="#157355">+25.0%</tspan>  (doubled)</text>
+
+<!-- bottom takeaway -->
+<text x="340" y="344" font-family="system-ui,sans-serif" font-size="11" fill="#888780" text-anchor="middle">the more your retriever depends on chunk coherence, the more a structure-aware parser is worth — and dense depends on it most</text>
+</svg>
